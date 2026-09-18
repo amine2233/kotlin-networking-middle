@@ -123,7 +123,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
   API 33 on Android) can leak in. Safe on `minSdk 21+`.
 - `NetworkService`, `Interceptor` and `RequestBody` are `fun interface`s with `suspend` members: trivial from Kotlin,
   impractical from Java. The library is Kotlin-first.
-- Publish to Maven Local / your registry with `maven-publish` (not configured yet, see roadmap).
+- Published to GitHub Packages by the release workflow; `./gradlew publishToMavenLocal -Pversion=x.y.z` for local testing.
 
 ## 9. Divergences from Swift (intentional)
 
@@ -146,12 +146,12 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 1. **Kotlin Multiplatform** — the core uses only `java.net.URI`/`URLEncoder` and `String.format` (three call sites);
    replace with `io.ktor.http.Url`/`encodeURLParameter` (or hand-rolled) to unlock iOS/JS targets.
-2. **Publishing** — `maven-publish` + signing, GitHub Packages or Maven Central; version from git tag.
+2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** and a **refresh-token interceptor** shipped in `InterceptorFactory`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
 5. **JSON bundle mocking** (MockingBird port) on top of `MockEngine` for offline UI tests.
 6. **Structured logging** — accept a `kotlin.Logger`/SLF4J sink instead of `(String) -> Unit`, plus header redaction.
 7. **Streaming bodies** — `RequestBody`/`Response` on `ByteReadChannel` for large uploads/downloads.
-8. **Detekt + CI** (GitHub Actions running `mise run lint` / `mise run test`).
+8. **Detekt** on top of the shared ktlint CI job.
 9. **Header redaction** in `description` (the `Authorization` header is logged today, as in Swift).
 10. **`Response.description` parity** — the Swift `QueryItems:` line is omitted; add it if log diffing against iOS matters.

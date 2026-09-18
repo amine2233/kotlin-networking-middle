@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
 }
 
-subprojects {
+allprojects {
     group = "io.github.amine2233"
-    version = "0.1.0"
+    version = (findProperty("version") as String?)?.takeIf { it.isNotBlank() && it != "unspecified" } ?: "0.1.0-SNAPSHOT"
 }

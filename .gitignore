@@ -5,3 +5,5 @@ build/
 *.iml
 .DS_Store
 local.properties
+.env.local
+node_modules/
