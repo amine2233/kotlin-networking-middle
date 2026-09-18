@@ -13,6 +13,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class NetworkProviderTest {
     private val baseURL = "https://api.test"
 

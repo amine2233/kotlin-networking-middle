@@ -4,10 +4,6 @@ plugins {
     application
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
 application {
     mainClass.set("sample.MainKt")
 }
