@@ -57,7 +57,7 @@ flag "--version <version>" help="Version to publish (e.g. 1.2.3)" required=#true
 run = './gradlew publish -Pversion="${usage_version?}" --no-daemon'
 
 [tasks.release]
-description = "Run semantic-release. Use --dry-run to preview without publishing."
+description = "Run semantic-release. Use --dry-run to preview without publishing. The conventionalcommits preset is pinned to 8: @semantic-release/commit-analyzer 13 bundles 8.0.0 and the 10.x preset breaks conventional-changelog-writer 8."
 usage = '''
 flag "-d --dry-run" help="Preview the release without publishing (no tag, no commit, no GitHub Release)"
 '''
@@ -75,7 +75,7 @@ npx --yes \
     -p @semantic-release/changelog \
     -p @semantic-release/exec \
     -p @semantic-release/git \
-    -p conventional-changelog-conventionalcommits \
+    -p conventional-changelog-conventionalcommits@8 \
     semantic-release $dry_run_opt
 '''
 

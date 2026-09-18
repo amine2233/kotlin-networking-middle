@@ -51,9 +51,10 @@ CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin
 All logic lives in `mise.toml`:
 
 - `mise run test` / `mise run lint` — what the `CI` workflow runs on pull requests.
-- Merging a `feat:` / `fix:` commit into `main` runs semantic-release: it tags
-  `vX.Y.Z`, updates `CHANGELOG.md`, publishes `io.github.amine2233:networking-middle` and
-  `io.github.amine2233:networking-middle-ktor` to GitHub Packages and creates the GitHub release with the jars attached.
+- Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
+  `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
+  `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
+  and creates the GitHub release with the jars attached.
 - `mise run release --dry-run` previews the next version locally.
 
 ## Usage

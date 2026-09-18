@@ -3,9 +3,8 @@
 # and a .releaserc.json (see templates/.releaserc.json).
 name: Release
 
+# Manual only: run it from the Actions tab on `main` when you want to cut a release.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
