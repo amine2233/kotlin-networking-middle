@@ -1,0 +1,23 @@
+[tools]
+java = "temurin-21"
+gradle = "9.4.1"
+ktlint = "1.8.0"
+
+[env]
+GRADLE_OPTS = "-Dorg.gradle.daemon=false"
+
+[tasks.build]
+description = "Compile all modules"
+run = "gradle build -x test"
+
+[tasks.test]
+description = "Run unit tests"
+run = "gradle test"
+
+[tasks.lint]
+description = "Lint Kotlin sources"
+run = "ktlint '**/*.kt' '!**/build/**'"
+
+[tasks.sample]
+description = "Run the Ktor sample"
+run = "gradle :sample:run"
