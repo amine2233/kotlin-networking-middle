@@ -9,8 +9,9 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven(file("../build/local-maven-repo")) {
-            content { includeGroup("io.github.amine2233") }
+        exclusiveContent {
+            forRepository { maven(file("../build/local-maven-repo")) }
+            filter { includeGroup("io.github.amine2233") }
         }
         mavenCentral()
     }
