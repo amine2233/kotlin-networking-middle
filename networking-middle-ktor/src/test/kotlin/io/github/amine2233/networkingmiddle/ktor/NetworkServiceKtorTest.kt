@@ -1,5 +1,6 @@
 package io.github.amine2233.networkingmiddle.ktor
 
+import io.github.amine2233.networkingmiddle.ApiError
 import io.github.amine2233.networkingmiddle.HttpMethod
 import io.github.amine2233.networkingmiddle.NetworkProviderFactory
 import io.github.amine2233.networkingmiddle.RequestBodyFactory
@@ -11,13 +12,18 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.toByteArray
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class NetworkServiceKtorTest {
     @Test
@@ -72,7 +78,7 @@ class NetworkServiceKtorTest {
                 MockEngine { request ->
                     assertEquals("https://api.test/login?lang=fr", request.url.toString())
                     assertEquals("Bearer t", request.headers["Authorization"])
-                    assertEquals("application/json", request.headers["Content-Type"] ?: request.body.contentType?.toString())
+                    assertEquals(ContentType.Application.Json, request.body.contentType)
                     respond("""{"ok":true}""", HttpStatusCode.OK)
                 }
             val provider =
@@ -112,5 +118,109 @@ class NetworkServiceKtorTest {
                 }
             val response = HttpClient(engine).asNetworkService().execute(UrlRequest("https://api.test", HttpMethod("PURGE")))
             assertEquals(listOf("text/plain"), response.headers["content-type"])
+        }
+
+    @Test
+    fun `encodable body is sent as json through the provider`() =
+        runTest {
+            val engine =
+                MockEngine { request ->
+                    assertEquals(ContentType.Application.Json, request.body.contentType)
+                    assertEquals("""{"user":"a"}""", request.body.toByteArray().decodeToString())
+                    respond("", HttpStatusCode.OK)
+                }
+            val provider = NetworkProviderFactory.create(HttpClient(engine).asNetworkService())
+            val request =
+                provider.newBuilder(
+                    path = "/users",
+                    method = HttpMethod.Post,
+                    body = RequestBodyFactory.encodableBody(mapOf("user" to "a")),
+                )
+            assertEquals(200, provider.request("https://api.test", request).validate().statusCode)
+        }
+
+    @Test
+    fun `request headers replace default request headers`() =
+        runTest {
+            val engine =
+                MockEngine { request ->
+                    assertEquals(listOf("b"), request.headers.getAll("X-App"))
+                    respond("", HttpStatusCode.OK)
+                }
+            val client = HttpClient(engine) { defaultRequest { header("X-App", "a") } }
+            val response = client.asNetworkService().execute(UrlRequest("https://api.test", headers = mapOf("X-App" to "b")))
+            assertEquals(200, response.statusCode)
+        }
+
+    @Test
+    fun `string body without content type is sent as octet stream`() =
+        runTest {
+            val engine =
+                MockEngine { request ->
+                    assertEquals(ContentType.Application.OctetStream, request.body.contentType)
+                    respond("", HttpStatusCode.OK)
+                }
+            val provider = NetworkProviderFactory.create(HttpClient(engine).asNetworkService())
+            val request = provider.newBuilder(path = "/", method = HttpMethod.Post, body = RequestBodyFactory.stringBody("hi"))
+            assertEquals(200, provider.request("https://api.test", request).validate().statusCode)
+        }
+
+    @Test
+    fun `lower case content type header sets the body content type`() =
+        runTest {
+            val engine =
+                MockEngine { request ->
+                    assertEquals(ContentType.Text.Plain, request.body.contentType)
+                    respond("", HttpStatusCode.OK)
+                }
+            val response =
+                HttpClient(engine).asNetworkService().execute(
+                    UrlRequest("https://api.test", HttpMethod.Post, mapOf("content-type" to "text/plain"), "hi".encodeToByteArray()),
+                )
+            assertEquals(200, response.statusCode)
+        }
+
+    @Test
+    fun `malformed content type fails before any request`() =
+        runTest {
+            var calls = 0
+            val engine =
+                MockEngine {
+                    calls++
+                    respond("", HttpStatusCode.OK)
+                }
+            val error =
+                assertFailsWith<ApiError.Client> {
+                    HttpClient(engine).asNetworkService().execute(
+                        UrlRequest(
+                            "https://api.test",
+                            HttpMethod.Post,
+                            mapOf("Content-Type" to "not a content type"),
+                            "hi".encodeToByteArray(),
+                        ),
+                    )
+                }
+            assertTrue(error.message.orEmpty().contains("not a content type"))
+            assertEquals(0, calls)
+        }
+
+    @Test
+    fun `first content type casing wins when several are present`() =
+        runTest {
+            val engine =
+                MockEngine { request ->
+                    assertEquals(ContentType.Application.Json, request.body.contentType)
+                    respond("", HttpStatusCode.OK)
+                }
+            val response =
+                HttpClient(engine).asNetworkService().execute(
+                    UrlRequest(
+                        "https://api.test",
+                        HttpMethod.Post,
+                        linkedMapOf("Content-Type" to "application/json", "content-type" to "text/plain"),
+                        "{}".encodeToByteArray(),
+                    ),
+                )
+            assertEquals(200, response.statusCode)
         }
 }
