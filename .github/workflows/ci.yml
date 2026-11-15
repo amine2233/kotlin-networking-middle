@@ -18,3 +18,12 @@ jobs:
       enable-lint: true
       enable-coverage: true
       enable-title-check: true
+
+  android-tests:
+    name: Android tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - name: Android host tests, consumer check and AAR assembly
+        run: ./gradlew testAndroidHostTest :android-consumer:verifyAndroidVariants :networking-middle:assembleAndroidMain :networking-middle-ktor:assembleAndroidMain --no-daemon
