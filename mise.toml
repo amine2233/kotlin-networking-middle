@@ -68,6 +68,30 @@ rm -rf build/local-maven-repo
 ./gradlew -p kmp-consumer compileKotlinJvm compileKotlinIosSimulatorArm64 -PnetworkingMiddleVersion="$version" --no-daemon
 '''
 
+[tasks.verify-xcframework]
+description = "Build the release NetworkingMiddleKotlin XCFramework, check its ios-arm64, ios-arm64-simulator and macos-arm64 slices, and run the swift-consumer Swift tests against it."
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+xcframework="networking-middle-apple/build/XCFrameworks/release/NetworkingMiddleKotlin.xcframework"
+./gradlew :networking-middle-apple:assembleNetworkingMiddleKotlinReleaseXCFramework --no-daemon
+
+echo "Slices in $xcframework:"
+ls -1 "$xcframework" | grep -v '^Info.plist$'
+for slice in ios-arm64 ios-arm64-simulator macos-arm64; do
+    if [[ ! -d "$xcframework/$slice" ]]; then
+        echo "error: $xcframework is missing the $slice slice" >&2
+        exit 1
+    fi
+done
+
+rm -rf swift-consumer/build/NetworkingMiddleKotlin.xcframework
+mkdir -p swift-consumer/build
+cp -R "$xcframework" swift-consumer/build/
+swift test --package-path swift-consumer
+'''
+
 [tasks.release]
 description = "Run semantic-release. Use --dry-run to preview without publishing. The conventionalcommits preset is pinned to 8: @semantic-release/commit-analyzer 13 bundles 8.0.0 and the 10.x preset breaks conventional-changelog-writer 8."
 usage = '''
