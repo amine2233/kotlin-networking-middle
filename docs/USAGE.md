@@ -152,8 +152,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 ## 10. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
-   seconds formatting) and the build is now Kotlin Multiplatform with only a `jvm()` target; adding non-JVM targets
-   (iOS/JS) is the next step.
+   seconds formatting) and the build is Kotlin Multiplatform. The core now has `jvm`, `iosArm64`, `iosSimulatorArm64`
+   and `macosArm64` targets; publishing the Apple artifacts is next.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.

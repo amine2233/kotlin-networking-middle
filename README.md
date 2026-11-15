@@ -14,6 +14,9 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 | `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor       | `networking-middle`, ktor-client-core |
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
+The core `networking-middle` also builds for iOS and macOS on arm64 (`iosArm64`, `iosSimulatorArm64`, `macosArm64`).
+The Apple artifacts are not published yet (item 14, issue #14). `networking-middle-ktor` stays JVM-only.
+
 ## Toolchain
 
 Managed by [mise](https://mise.jdx.dev) (JDK, Node, ktlint) — `mise trust && mise install`, then:
@@ -29,7 +32,8 @@ mise run sample                # run the Ktor sample
 ```
 
 `./gradlew build` checks the public API of `networking-middle` and `networking-middle-ktor` against the committed
-`api/*.api` dumps (Kotlin Gradle plugin ABI validation). For an intended API change, run `./gradlew updateKotlinAbi`
+`api/*.api` dumps (Kotlin Gradle plugin ABI validation). The core also has a klib dump for its Apple targets
+(`api/*.klib.api`). For an intended API change, run `./gradlew updateKotlinAbi`
 and commit the updated dumps together with the change.
 
 ## Installation
@@ -60,6 +64,8 @@ CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin
 All logic lives in `mise.toml`:
 
 - `mise run test-coverage` / `mise run lint` — what the `CI` workflow runs on pull requests.
+- A second `CI` job runs `./gradlew :networking-middle:allTests` on a macOS arm64 runner (JVM, macOS and iOS
+  simulator tests) and caches `~/.konan`.
 - Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
   `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
   `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
