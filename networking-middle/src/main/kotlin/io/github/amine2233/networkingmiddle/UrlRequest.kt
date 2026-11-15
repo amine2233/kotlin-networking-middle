@@ -2,7 +2,11 @@ package io.github.amine2233.networkingmiddle
 
 import java.net.URLEncoder
 
-/** The platform-neutral equivalent of Foundation's `URLRequest`: what a [NetworkService] executes. */
+/**
+ * The platform-neutral equivalent of Foundation's `URLRequest`: what a [NetworkService] executes.
+ *
+ * @property body The raw request body. Callers and implementers must not mutate this array.
+ */
 public data class UrlRequest(
     val url: String,
     val method: HttpMethod = HttpMethod.Get,
@@ -41,7 +45,11 @@ public data class UrlRequest(
     }
 }
 
-/** What a [NetworkService] returns: the raw transport result, before it is wrapped into a [Response]. */
+/**
+ * What a [NetworkService] returns: the raw transport result, before it is wrapped into a [Response].
+ *
+ * @property body The raw response body. Callers and implementers must not mutate this array.
+ */
 public data class UrlResponse(
     val statusCode: Int,
     val headers: Map<String, List<String>> = emptyMap(),
