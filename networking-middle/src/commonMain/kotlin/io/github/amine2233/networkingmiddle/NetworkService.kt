@@ -10,6 +10,7 @@ import kotlinx.coroutines.ensureActive
  * or with a one-line lambda in tests. Transport failures are thrown; the provider turns them into a [Response].
  */
 public fun interface NetworkService {
+    @Throws(Throwable::class)
     public suspend fun execute(request: UrlRequest): UrlResponse
 }
 

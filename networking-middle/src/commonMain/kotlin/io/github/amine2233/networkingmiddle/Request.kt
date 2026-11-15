@@ -44,6 +44,7 @@ public object RequestFactory {
 }
 
 /** Resolves the full URL from [baseURL] and applies method, headers, parameters and body. */
+@Throws(ApiError::class, CancellationException::class)
 public suspend fun Request.asUrlRequest(baseURL: String): UrlRequest {
     val url = baseURL.appendingPathComponent(path)
     if (parseUrlOrNull(url) == null) throw ApiError.InvalidUrl(url)

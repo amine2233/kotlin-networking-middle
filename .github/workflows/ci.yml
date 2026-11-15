@@ -32,6 +32,7 @@ jobs:
           restore-keys: konan-${{ runner.os }}-
       - run: ./gradlew :networking-middle:allTests :networking-middle-ktor:allTests --no-daemon
       - run: mise run verify-publish
+      - run: mise run verify-xcframework
 
   android-tests:
     name: Android tests

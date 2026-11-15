@@ -144,7 +144,50 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
   `./gradlew publishToMavenLocal -Pversion=x.y.z`, or `mise run verify-publish` to publish to `build/local-maven-repo`,
   check the artifacts and metadata, and compile the `kmp-consumer` fixture against them.
 
-## 9. Divergences from Swift (intentional)
+## 9. Swift / XCFramework
+
+The `networking-middle-apple` module (Apple targets only, not published) builds one static XCFramework that exports
+`networking-middle` and `networking-middle-ktor`, plus `DarwinNetworkProviderFactory`, which returns a provider backed
+by Ktor's Darwin engine.
+
+- **Build it locally** on macOS: `./gradlew :networking-middle-apple:assembleNetworkingMiddleKotlinReleaseXCFramework`.
+  The output is `networking-middle-apple/build/XCFrameworks/release/NetworkingMiddleKotlin.xcframework`, with
+  `ios-arm64`, `ios-arm64-simulator` and `macos-arm64` slices. `mise run verify-xcframework` builds it, checks the
+  slices, copies it into the `swift-consumer/` fixture and runs that package's Swift Testing suite.
+- **Name**: the framework and Swift module are `NetworkingMiddleKotlin`, not `NetworkingMiddle`, so an app can link it
+  next to the native Swift `NetworkingMiddle` package without a module name clash.
+- **Provider**: `DarwinNetworkProviderFactory.shared.create(interceptors:)` builds an `HttpClient(Darwin)` and wraps it
+  with `NetworkProviderFactory.create`. The provider owns that client and never closes it, so keep one provider for
+  the app's lifetime.
+
+```swift
+import Foundation
+import NetworkingMiddleKotlin
+
+let provider = DarwinNetworkProviderFactory.shared.create(interceptors: [])
+let request = RequestFactory.shared.create(
+    path: "/users", method: HttpMethod.companion.Get, parameters: nil, body: nil, headers: [:]
+)
+do {
+    let response = try await provider.request(baseURL: "https://api.example.com", request: request)
+    print(response.statusCode)
+} catch {
+    switch (error as NSError).kotlinException {
+    case let invalid as ApiError.InvalidUrl: print("bad URL: \(invalid)")
+    default: throw error
+    }
+}
+```
+
+- **Errors**: the throwing APIs carry `@Throws`, so Kotlin errors arrive in Swift as thrown `NSError`s instead of
+  crashing the process. `(error as NSError).kotlinException` is the `ApiError` subclass (for example
+  `ApiError.InvalidUrl`), or, for `validate()`, the transport `Throwable` it rethrows.
+- **Cancellation**: cancelling the Swift task is not propagated into the Kotlin call; the request runs to completion.
+- **Interceptors**: interceptors written in Swift are not supported. Pass the Kotlin ones from `InterceptorFactory`.
+- **Distribution**: no released Swift package exists yet. Build the XCFramework from source; `swift-consumer/` is a
+  test fixture, not a shipped package.
+
+## 10. Divergences from Swift (intentional)
 
 | Swift                                   | Kotlin                                              | Why |
 |-----------------------------------------|-----------------------------------------------------|-----|
@@ -160,7 +203,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 | `NetworkingMiddleMocking` (MockingBird) | not ported                                          | Ktor `MockEngine` covers it. |
 | `NetworkingMiddlePinning`               | not ported                                          | Pinning is engine configuration in Ktor. |
 
-## 10. Roadmap / next iterations
+## 11. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
    seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform (Maven

@@ -5,6 +5,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import kotlin.coroutines.cancellation.CancellationException
 
 /** The result of a network call: body, headers, status code and potential transport error. */
 public interface Response {
@@ -74,6 +75,7 @@ private const val NULL_BODY = "Unable to decode from a `Response`; body was null
 private const val NULL_ERROR_BODY = "Unable to decode error from a `Response`; body was null."
 
 /** Throws the transport error if present. */
+@Throws(Throwable::class)
 public fun <R : Response> R.validate(): R = error?.let { throw it } ?: this
 
 /**
@@ -85,6 +87,7 @@ public fun <R : Response> R.validate(): R = error?.let { throw it } ?: this
  * Decoding is blocking, CPU-bound work and is not main-safe: the caller chooses the dispatcher,
  * for example `withContext(Dispatchers.Default)`.
  */
+@Throws(ApiError::class, CancellationException::class)
 public fun <Model> Response.decode(
     serializer: KSerializer<Model>,
     json: Json = Json,
@@ -107,6 +110,7 @@ public fun <Model> Response.decodeResult(
 
 public inline fun <reified Model> Response.decodeResult(json: Json = Json): Result<Model> = decodeResult(serializer<Model>(), json)
 
+@Throws(ApiError::class, CancellationException::class)
 public fun <Model> Response.decodeError(
     serializer: KSerializer<Model>,
     json: Json = Json,
@@ -173,12 +177,15 @@ public fun Response.debug(completion: (Response) -> Unit): Response = also { com
 public fun Response.header(name: String): List<String>? = headers.entries.firstOrNull { it.key.equals(name, ignoreCase = true) }?.value
 
 /** Throws [ApiError.Unauthenticated] when the status code is 401. */
+@Throws(ApiError::class, CancellationException::class)
 public fun <R : Response> R.unauthenticated(): R = if (statusCode == 401) throw ApiError.Unauthenticated() else this
 
 /** Throws [ApiError.Unauthorized] when the status code is 403. */
+@Throws(ApiError::class, CancellationException::class)
 public fun <R : Response> R.unauthorized(): R = if (statusCode == 403) throw ApiError.Unauthorized() else this
 
 /** Throws [ApiError.StatusCode] when the response has exactly this [statusCode] (same semantics as Swift). */
+@Throws(ApiError::class, CancellationException::class)
 public fun <R : Response> R.validate(statusCode: Int): R = if (this.statusCode == statusCode) throw ApiError.StatusCode() else this
 
 public val Response.description: String
