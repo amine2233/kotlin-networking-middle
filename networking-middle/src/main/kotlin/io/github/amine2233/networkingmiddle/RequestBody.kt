@@ -36,6 +36,9 @@ public object RequestBodyFactory {
 
 private const val CONTENT_TYPE = "Content-Type"
 
+private fun UrlRequest.settingContentTypeIfAbsent(value: String): UrlRequest =
+    if (headers.keys.any { it.equals(CONTENT_TYPE, ignoreCase = true) }) this else setHeader(CONTENT_TYPE, value)
+
 internal class EncodableBodyRequest<T>(
     private val model: T,
     private val serializer: KSerializer<T>,
@@ -48,7 +51,7 @@ internal class EncodableBodyRequest<T>(
             } catch (error: Exception) {
                 throw ApiError.Body(error)
             }
-        return urlRequest.setHeader(CONTENT_TYPE, "application/json").copy(body = data)
+        return urlRequest.settingContentTypeIfAbsent("application/json").copy(body = data)
     }
 }
 
@@ -57,7 +60,7 @@ internal class FormBodyRequest(
 ) : RequestBody {
     override suspend fun apply(urlRequest: UrlRequest): UrlRequest =
         urlRequest
-            .setHeader(CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8")
+            .settingContentTypeIfAbsent("application/x-www-form-urlencoded;charset=UTF-8")
             .copy(body = data.keyValuePairs().encodeToByteArray())
 }
 
@@ -67,7 +70,7 @@ internal class JsonBodyRequest(
 ) : RequestBody {
     override suspend fun apply(urlRequest: UrlRequest): UrlRequest =
         urlRequest
-            .setHeader(CONTENT_TYPE, "application/json")
+            .settingContentTypeIfAbsent("application/json")
             .copy(body = json.encodeToString(JsonElement.serializer(), element).encodeToByteArray())
 }
 

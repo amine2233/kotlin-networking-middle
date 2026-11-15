@@ -87,12 +87,16 @@ public fun Request.bearer(value: String): Request = authorised(value)
 
 public fun Request.token(token: String): Request = setHeader("Authorization", "token $token")
 
-/** Returns a copy with [key] set to [value]; a `null` value removes the header (Swift `set(_:forHttpHeaderKey:)`). */
+/**
+ * Returns a copy with [key] set to [value]; a `null` value removes the header (Swift `set(_:forHttpHeaderKey:)`).
+ * The key match is case-insensitive: any existing casing of [key] is replaced or removed.
+ */
 public fun Request.setHeader(
     key: String,
     value: String?,
 ): Request {
-    val newHeaders = if (value == null) headers - key else headers + (key to value)
+    val remaining = headers.withoutHeader(key)
+    val newHeaders = if (value == null) remaining else remaining + (key to value)
     return RequestBuilder(path, method, parameters, body, newHeaders)
 }
 

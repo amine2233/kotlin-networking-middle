@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
+import java.net.URLDecoder
 
 /** Anything that can be applied to a [UrlRequest] as query parameters. */
 public fun interface RequestParameters {
@@ -26,7 +27,10 @@ public object RequestParametersFactory {
         json: Json = Json,
     ): RequestParameters = queryEncodableParameters(query, serializer<T>(), json)
 
-    /** Parses `a=1&b=2` into query parameters. */
+    /**
+     * Parses `a=1&b=2` into query parameters. Keys and values are percent-decoded before being re-encoded,
+     * a literal `+` is kept as `+` (not decoded to a space), and with duplicate keys only the last value is kept.
+     */
     public fun stringRequestParameters(query: String): RequestParameters = RequestParametersString(query)
 }
 
@@ -58,10 +62,18 @@ internal class RequestParametersString(
                 .filter { it.isNotEmpty() }
                 .associate { item ->
                     val parts = item.split("=", limit = 2)
-                    parts[0] to parts.getOrElse(1) { "" }
+                    parts[0].percentDecoded() to parts.getOrElse(1) { "" }.percentDecoded()
                 }
         return QueryParameters(items).apply(urlRequest)
     }
+
+    /** A malformed escape such as `100%` keeps the part as written. */
+    private fun String.percentDecoded(): String =
+        try {
+            URLDecoder.decode(replace("+", "%2B"), Charsets.UTF_8)
+        } catch (_: IllegalArgumentException) {
+            this
+        }
 }
 
 /** Only scalar fields become query items; nested objects/arrays and nulls are skipped. */
