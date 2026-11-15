@@ -174,4 +174,17 @@ class ResponseTest {
         assertTrue("Body[3]:" in binary.description)
         assertTrue("\uFFFD" !in binary.description)
     }
+
+    @Test
+    fun `description prints the percent-decoded query`() {
+        val description = ResponseDefault(UrlRequest("https://api.test/search?q=a%20b"), 200).description
+        assertTrue("Query: q=a b" in description, description)
+    }
+
+    @Test
+    fun `description prints unknown for an unparseable url`() {
+        val description = ResponseDefault(UrlRequest("not a url"), 200).description
+        assertTrue("[unknown] unknown" in description, description)
+        assertTrue("Path:" !in description, description)
+    }
 }

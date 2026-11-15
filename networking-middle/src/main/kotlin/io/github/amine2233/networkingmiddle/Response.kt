@@ -185,10 +185,10 @@ public val Response.description: String
     get() =
         buildString {
             append("--- Request ---")
-            val uri = runCatching { java.net.URI(request.url) }.getOrNull()
-            append("\n[${request.method.rawValue}] [${uri?.scheme ?: "unknown"}] ${uri?.host ?: "unknown"}")
-            uri?.path?.takeIf { it.isNotEmpty() && it != "/" }?.let { append("\nPath: $it") }
-            uri?.query?.let { query -> append("\n\tQuery: ${query.split("&").sorted().joinToString("&")}") }
+            val url = parseUrlOrNull(request.url)
+            append("\n[${request.method.rawValue}] [${url?.scheme ?: "unknown"}] ${url?.host ?: "unknown"}")
+            url?.path?.takeIf { it.isNotEmpty() && it != "/" }?.let { append("\nPath: ${it.percentDecoded()}") }
+            url?.query?.let { query -> append("\n\tQuery: ${query.percentDecoded().split("&").sorted().joinToString("&")}") }
             request.body?.let { append("\n\tBody[${it.size}]:" + (it.utf8OrNull()?.let { text -> "\n\t$text" } ?: "")) }
             if (request.headers.isNotEmpty()) {
                 append("\nHeaders:\n\t[${request.headers.entries.joinToString(",") { "${it.key}: ${it.value}" }}]")

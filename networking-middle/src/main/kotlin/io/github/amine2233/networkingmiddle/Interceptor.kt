@@ -26,8 +26,7 @@ public object InterceptorFactory {
         Interceptor { baseURL, request, next ->
             val start = TimeSource.Monotonic.markNow()
             next(baseURL, request).also {
-                val seconds = start.elapsedNow().inWholeMilliseconds / 1000.0
-                printer("[Request][Time] ${"%.2f".format(java.util.Locale.ROOT, seconds)} seconds")
+                printer("[Request][Time] ${formatSeconds(start.elapsedNow().inWholeMilliseconds)} seconds")
             }
         }
 
@@ -75,4 +74,10 @@ public object InterceptorFactory {
             if (newToken == null) response else next(baseURL, request.authorised(newToken))
         }
     }
+}
+
+/** Formats [millis] as seconds with two decimals, rounded half up, using integer arithmetic only. */
+internal fun formatSeconds(millis: Long): String {
+    val centiseconds = (millis + 5) / 10
+    return "${centiseconds / 100}.${(centiseconds % 100).toString().padStart(2, '0')}"
 }

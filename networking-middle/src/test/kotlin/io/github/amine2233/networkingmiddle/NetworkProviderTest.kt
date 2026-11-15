@@ -94,12 +94,12 @@ class NetworkProviderTest {
     @Test
     fun `transport failure becomes an error response instead of throwing`() =
         runTest {
-            val provider = NetworkProviderFactory.create(NetworkService { throw java.io.IOException("offline") })
+            val provider = NetworkProviderFactory.create(NetworkService { throw OfflineException("offline") })
             val response = provider.request(baseURL, provider.newBuilder("/", HttpMethod.Get))
             assertEquals(499, response.statusCode)
-            assertIs<java.io.IOException>(response.error)
+            assertIs<OfflineException>(response.error)
             assertNull(response.body)
-            assertFailsWith<java.io.IOException> { response.validate() }
+            assertFailsWith<OfflineException> { response.validate() }
         }
 
     @Test
@@ -136,7 +136,7 @@ class NetworkProviderTest {
                     try {
                         delay(10_000)
                     } catch (error: CancellationException) {
-                        throw java.io.IOException("Canceled")
+                        throw OfflineException("Canceled")
                     }
                     UrlResponse(200)
                 }
@@ -181,3 +181,7 @@ class NetworkProviderTest {
             assertEquals(1, count)
         }
 }
+
+private class OfflineException(
+    message: String,
+) : Exception(message)

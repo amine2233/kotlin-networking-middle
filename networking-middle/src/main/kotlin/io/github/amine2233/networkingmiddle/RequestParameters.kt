@@ -6,7 +6,6 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
-import java.net.URLDecoder
 
 /** Anything that can be applied to a [UrlRequest] as query parameters. */
 public fun interface RequestParameters {
@@ -66,14 +65,6 @@ internal class RequestParametersString(
                 }
         return QueryParameters(items).apply(urlRequest)
     }
-
-    /** A malformed escape such as `100%` keeps the part as written. */
-    private fun String.percentDecoded(): String =
-        try {
-            URLDecoder.decode(replace("+", "%2B"), Charsets.UTF_8)
-        } catch (_: IllegalArgumentException) {
-            this
-        }
 }
 
 /** Only scalar fields become query items; nested objects/arrays and nulls are skipped. */
