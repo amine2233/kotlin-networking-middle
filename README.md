@@ -12,6 +12,7 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 |--------------------------|--------------------------------------------------------------|-------------------------------------|
 | `networking-middle`      | `Request`, `Response`, `NetworkProvider`, modifiers, interceptors, `NetworkService` contract | kotlinx-coroutines, kotlinx-serialization-json |
 | `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM, Android and the same Apple targets as the core) | `networking-middle`, ktor-client-core |
+| `networking-middle-apple` | `NetworkingMiddleKotlin` static XCFramework for Swift and `DarwinNetworkProviderFactory` (Apple targets only, not published) | both, ktor-client-darwin |
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
 Both `networking-middle` and `networking-middle-ktor` also build for iOS and macOS on arm64 (`iosArm64`,
@@ -30,6 +31,7 @@ mise run build                 # full Gradle build
 mise run build_documentations  # aggregated Dokka HTML docs (build/dokka/html)
 mise run sample                # run the Ktor sample
 mise run verify-publish        # publish to build/local-maven-repo, check the metadata, compile kmp-consumer (macOS)
+mise run verify-xcframework    # build the NetworkingMiddleKotlin XCFramework, check its slices, run swift-consumer tests (macOS)
 ```
 
 Building also needs an Android SDK (the libraries have an Android target, `compileSdk 36`). AGP finds it through
@@ -85,7 +87,9 @@ All logic lives in `mise.toml`:
   on a macOS arm64 runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`. It then runs
   `mise run verify-publish`: both modules are published to `build/local-maven-repo` with version `0.0.0-verify`, the
   artifact set and `.module` metadata are checked, and the standalone `kmp-consumer` fixture compiles for `jvm` and
-  `iosSimulatorArm64` against them.
+  `iosSimulatorArm64` against them. Last, it runs `mise run verify-xcframework`: the release `NetworkingMiddleKotlin`
+  XCFramework is built, its `ios-arm64`, `ios-arm64-simulator` and `macos-arm64` slices are checked, and the
+  `swift-consumer` Swift Testing suite runs against it on macOS.
 - The `android-tests` job of the `CI` workflow runs the Android host tests of both libraries, checks that the
   `android-consumer` fixture resolves their Android variants and assembles the AARs, using the Android SDK preinstalled
   on `ubuntu-latest`.
@@ -146,6 +150,42 @@ val provider = NetworkProviderFactory.create(networkService = client.asNetworkSe
 ```
 
 Full walkthrough, API mapping and roadmap: [docs/USAGE.md](docs/USAGE.md).
+
+## Swift / XCFramework
+
+`networking-middle-apple` packages both libraries into one static XCFramework for Swift callers. Build it locally on
+macOS with:
+
+```sh
+mise run verify-xcframework   # or: ./gradlew :networking-middle-apple:assembleNetworkingMiddleKotlinReleaseXCFramework
+```
+
+The output lands in `networking-middle-apple/build/XCFrameworks/release/NetworkingMiddleKotlin.xcframework`, with
+`ios-arm64`, `ios-arm64-simulator` and `macos-arm64` slices. The framework is named `NetworkingMiddleKotlin`, not
+`NetworkingMiddle`, so it never clashes with the native Swift `NetworkingMiddle` package in the same app.
+
+```swift
+import NetworkingMiddleKotlin
+
+let provider = DarwinNetworkProviderFactory.shared.create(interceptors: [])   // Ktor Darwin client, never closed
+let request = RequestFactory.shared.create(
+    path: "/users", method: HttpMethod.companion.Get, parameters: nil, body: nil, headers: [:]
+)
+do {
+    let response = try await provider.request(baseURL: "https://api.example.com", request: request)
+} catch {
+    if (error as NSError).kotlinException is ApiError.InvalidUrl { /* bad base URL */ }
+}
+```
+
+- Kotlin errors arrive in Swift as thrown `NSError`s. Their `kotlinException` is the `ApiError` subclass, or the
+  transport `Throwable` that `validate()` rethrows.
+- Cancelling the Swift task does not cancel the Kotlin call.
+- Interceptors written in Swift are not supported; use the Kotlin `InterceptorFactory` ones.
+- No released Swift package exists yet: build the XCFramework from source. `swift-consumer/` is a test fixture, not a
+  shipped package.
+
+See [docs/USAGE.md](docs/USAGE.md#9-swift--xcframework).
 
 ## Testing your own code
 
