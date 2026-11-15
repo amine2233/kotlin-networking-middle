@@ -1,0 +1,9 @@
+public final class io/github/amine2233/networkingmiddle/ktor/NetworkServiceKtor : io/github/amine2233/networkingmiddle/NetworkService {
+	public fun <init> (Lio/ktor/client/HttpClient;)V
+	public fun execute (Lio/github/amine2233/networkingmiddle/UrlRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/amine2233/networkingmiddle/ktor/NetworkServiceKtorKt {
+	public static final fun asNetworkService (Lio/ktor/client/HttpClient;)Lio/github/amine2233/networkingmiddle/NetworkService;
+}
+

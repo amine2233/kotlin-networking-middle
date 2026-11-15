@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.dokka)
     `java-library`
     `maven-publish`
 }
@@ -12,6 +14,8 @@ java {
 
 kotlin {
     explicitApi()
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation()
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         freeCompilerArgs.add("-Xjdk-release=11")
