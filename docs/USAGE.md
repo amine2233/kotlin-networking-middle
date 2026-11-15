@@ -126,9 +126,10 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 ## 8. Android
 
-- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a JVM and an Android target.
-  The Android target publishes an AAR per module, `io.github.amine2233:networking-middle-android` and
-  `io.github.amine2233:networking-middle-ktor-android`, built with `minSdk 24` and Java 11 bytecode.
+- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a JVM and an Android target
+  (the core also has Apple targets, which Android does not use). The Android target publishes an AAR per module,
+  `io.github.amine2233:networking-middle-android` and `io.github.amine2233:networking-middle-ktor-android`, built with
+  `minSdk 24` and Java 11 bytecode.
 - Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
   (`ktor-client-okhttp` or `ktor-client-android`); Gradle picks the Android AAR from the module metadata. Maven
   consumers on the JVM use the `-jvm` artifacts: `io.github.amine2233:networking-middle-jvm` and
@@ -158,9 +159,9 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 ## 10. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
-   seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform with only
-   a `jvm()` target (Maven artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`); adding non-JVM targets
-   (iOS/JS) is the next step.
+   seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform (Maven
+   artifacts `networking-middle-jvm`/`-android` and `networking-middle-ktor-jvm`/`-android`). The core has `jvm`,
+   `android`, `iosArm64`, `iosSimulatorArm64` and `macosArm64` targets; the Ktor adapter has `jvm` and `android`. Publishing the Apple artifacts is next.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
