@@ -126,8 +126,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 ## 8. Android
 
-- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a single JVM target, compiled to
-  Java 11 bytecode. Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
+- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform; Android uses their JVM target, compiled
+  to Java 11 bytecode (the core also has Apple targets, which Android does not use). Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
   (`ktor-client-okhttp` or `ktor-client-android`). Maven consumers use the `-jvm` artifacts:
   `io.github.amine2233:networking-middle-jvm` and `io.github.amine2233:networking-middle-ktor-jvm`.
 - Compiled with `jvmTarget = 11` and `-Xjdk-release=11`, so no JDK 17-only API (e.g. `URLEncoder.encode(String, Charset)`,
@@ -155,9 +155,9 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 ## 10. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
-   seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform with only
-   a `jvm()` target (Maven artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`); adding non-JVM targets
-   (iOS/JS) is the next step.
+   seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform (Maven
+   artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`). The core has `jvm`, `iosArm64`,
+   `iosSimulatorArm64` and `macosArm64` targets; the Ktor adapter is JVM-only. Publishing the Apple artifacts is next.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.

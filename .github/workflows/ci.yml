@@ -18,3 +18,16 @@ jobs:
       enable-lint: true
       enable-coverage: true
       enable-title-check: true
+
+  apple-tests:
+    name: Apple tests (macOS arm64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+      - run: ./gradlew :networking-middle:allTests --no-daemon

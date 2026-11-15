@@ -1,0 +1,303 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.amine2233:networking-middle>
+abstract fun interface io.github.amine2233.networkingmiddle/Interceptor { // io.github.amine2233.networkingmiddle/Interceptor|null[0]
+    abstract suspend fun intercept(kotlin/String, io.github.amine2233.networkingmiddle/Request, kotlin.coroutines/SuspendFunction2<kotlin/String, io.github.amine2233.networkingmiddle/Request, io.github.amine2233.networkingmiddle/Response>): io.github.amine2233.networkingmiddle/Response // io.github.amine2233.networkingmiddle/Interceptor.intercept|intercept(kotlin.String;io.github.amine2233.networkingmiddle.Request;kotlin.coroutines.SuspendFunction2<kotlin.String,io.github.amine2233.networkingmiddle.Request,io.github.amine2233.networkingmiddle.Response>){}[0]
+}
+
+abstract fun interface io.github.amine2233.networkingmiddle/NetworkService { // io.github.amine2233.networkingmiddle/NetworkService|null[0]
+    abstract suspend fun execute(io.github.amine2233.networkingmiddle/UrlRequest): io.github.amine2233.networkingmiddle/UrlResponse // io.github.amine2233.networkingmiddle/NetworkService.execute|execute(io.github.amine2233.networkingmiddle.UrlRequest){}[0]
+}
+
+abstract fun interface io.github.amine2233.networkingmiddle/RequestBody { // io.github.amine2233.networkingmiddle/RequestBody|null[0]
+    abstract suspend fun apply(io.github.amine2233.networkingmiddle/UrlRequest): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/RequestBody.apply|apply(io.github.amine2233.networkingmiddle.UrlRequest){}[0]
+}
+
+abstract fun interface io.github.amine2233.networkingmiddle/RequestModifier { // io.github.amine2233.networkingmiddle/RequestModifier|null[0]
+    abstract fun modify(kotlin/String, io.github.amine2233.networkingmiddle/Request): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/RequestModifier.modify|modify(kotlin.String;io.github.amine2233.networkingmiddle.Request){}[0]
+}
+
+abstract fun interface io.github.amine2233.networkingmiddle/RequestParameters { // io.github.amine2233.networkingmiddle/RequestParameters|null[0]
+    abstract fun apply(io.github.amine2233.networkingmiddle/UrlRequest): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/RequestParameters.apply|apply(io.github.amine2233.networkingmiddle.UrlRequest){}[0]
+}
+
+abstract interface io.github.amine2233.networkingmiddle/NetworkProvider { // io.github.amine2233.networkingmiddle/NetworkProvider|null[0]
+    abstract fun intercept(kotlin.coroutines/SuspendFunction3<kotlin/String, io.github.amine2233.networkingmiddle/Request, kotlin.coroutines/SuspendFunction2<kotlin/String, io.github.amine2233.networkingmiddle/Request, io.github.amine2233.networkingmiddle/Response>, io.github.amine2233.networkingmiddle/Response>): io.github.amine2233.networkingmiddle/NetworkProvider // io.github.amine2233.networkingmiddle/NetworkProvider.intercept|intercept(kotlin.coroutines.SuspendFunction3<kotlin.String,io.github.amine2233.networkingmiddle.Request,kotlin.coroutines.SuspendFunction2<kotlin.String,io.github.amine2233.networkingmiddle.Request,io.github.amine2233.networkingmiddle.Response>,io.github.amine2233.networkingmiddle.Response>){}[0]
+    abstract fun modifyRequests(kotlin/Function2<kotlin/String, io.github.amine2233.networkingmiddle/Request, io.github.amine2233.networkingmiddle/Request>): io.github.amine2233.networkingmiddle/NetworkProvider // io.github.amine2233.networkingmiddle/NetworkProvider.modifyRequests|modifyRequests(kotlin.Function2<kotlin.String,io.github.amine2233.networkingmiddle.Request,io.github.amine2233.networkingmiddle.Request>){}[0]
+    abstract fun newBuilder(kotlin/String, io.github.amine2233.networkingmiddle/HttpMethod, io.github.amine2233.networkingmiddle/RequestParameters? = ..., io.github.amine2233.networkingmiddle/RequestBody? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/NetworkProvider.newBuilder|newBuilder(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;io.github.amine2233.networkingmiddle.RequestParameters?;io.github.amine2233.networkingmiddle.RequestBody?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    abstract suspend fun request(kotlin/String, io.github.amine2233.networkingmiddle/Request): io.github.amine2233.networkingmiddle/Response // io.github.amine2233.networkingmiddle/NetworkProvider.request|request(kotlin.String;io.github.amine2233.networkingmiddle.Request){}[0]
+}
+
+abstract interface io.github.amine2233.networkingmiddle/Request { // io.github.amine2233.networkingmiddle/Request|null[0]
+    abstract val body // io.github.amine2233.networkingmiddle/Request.body|{}body[0]
+        abstract fun <get-body>(): io.github.amine2233.networkingmiddle/RequestBody? // io.github.amine2233.networkingmiddle/Request.body.<get-body>|<get-body>(){}[0]
+    abstract val headers // io.github.amine2233.networkingmiddle/Request.headers|{}headers[0]
+        abstract fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin/String> // io.github.amine2233.networkingmiddle/Request.headers.<get-headers>|<get-headers>(){}[0]
+    abstract val method // io.github.amine2233.networkingmiddle/Request.method|{}method[0]
+        abstract fun <get-method>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/Request.method.<get-method>|<get-method>(){}[0]
+    abstract val parameters // io.github.amine2233.networkingmiddle/Request.parameters|{}parameters[0]
+        abstract fun <get-parameters>(): io.github.amine2233.networkingmiddle/RequestParameters? // io.github.amine2233.networkingmiddle/Request.parameters.<get-parameters>|<get-parameters>(){}[0]
+    abstract val path // io.github.amine2233.networkingmiddle/Request.path|{}path[0]
+        abstract fun <get-path>(): kotlin/String // io.github.amine2233.networkingmiddle/Request.path.<get-path>|<get-path>(){}[0]
+}
+
+abstract interface io.github.amine2233.networkingmiddle/Response { // io.github.amine2233.networkingmiddle/Response|null[0]
+    abstract val body // io.github.amine2233.networkingmiddle/Response.body|{}body[0]
+        abstract fun <get-body>(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/Response.body.<get-body>|<get-body>(){}[0]
+    abstract val error // io.github.amine2233.networkingmiddle/Response.error|{}error[0]
+        abstract fun <get-error>(): kotlin/Throwable? // io.github.amine2233.networkingmiddle/Response.error.<get-error>|<get-error>(){}[0]
+    abstract val headers // io.github.amine2233.networkingmiddle/Response.headers|{}headers[0]
+        abstract fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // io.github.amine2233.networkingmiddle/Response.headers.<get-headers>|<get-headers>(){}[0]
+    abstract val request // io.github.amine2233.networkingmiddle/Response.request|{}request[0]
+        abstract fun <get-request>(): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/Response.request.<get-request>|<get-request>(){}[0]
+    abstract val statusCode // io.github.amine2233.networkingmiddle/Response.statusCode|{}statusCode[0]
+        abstract fun <get-statusCode>(): kotlin/Int // io.github.amine2233.networkingmiddle/Response.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
+
+    final object Companion { // io.github.amine2233.networkingmiddle/Response.Companion|null[0]
+        final fun error(kotlin/Throwable): io.github.amine2233.networkingmiddle/Response // io.github.amine2233.networkingmiddle/Response.Companion.error|error(kotlin.Throwable){}[0]
+    }
+}
+
+final class io.github.amine2233.networkingmiddle/AnyRequest : io.github.amine2233.networkingmiddle/Request { // io.github.amine2233.networkingmiddle/AnyRequest|null[0]
+    constructor <init>(io.github.amine2233.networkingmiddle/Request) // io.github.amine2233.networkingmiddle/AnyRequest.<init>|<init>(io.github.amine2233.networkingmiddle.Request){}[0]
+    constructor <init>(kotlin/String, io.github.amine2233.networkingmiddle/HttpMethod, io.github.amine2233.networkingmiddle/RequestParameters?, io.github.amine2233.networkingmiddle/RequestBody?, kotlin.collections/Map<kotlin/String, kotlin/String>) // io.github.amine2233.networkingmiddle/AnyRequest.<init>|<init>(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;io.github.amine2233.networkingmiddle.RequestParameters?;io.github.amine2233.networkingmiddle.RequestBody?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+
+    final val body // io.github.amine2233.networkingmiddle/AnyRequest.body|{}body[0]
+        final fun <get-body>(): io.github.amine2233.networkingmiddle/RequestBody? // io.github.amine2233.networkingmiddle/AnyRequest.body.<get-body>|<get-body>(){}[0]
+    final val headers // io.github.amine2233.networkingmiddle/AnyRequest.headers|{}headers[0]
+        final fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin/String> // io.github.amine2233.networkingmiddle/AnyRequest.headers.<get-headers>|<get-headers>(){}[0]
+    final val method // io.github.amine2233.networkingmiddle/AnyRequest.method|{}method[0]
+        final fun <get-method>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/AnyRequest.method.<get-method>|<get-method>(){}[0]
+    final val parameters // io.github.amine2233.networkingmiddle/AnyRequest.parameters|{}parameters[0]
+        final fun <get-parameters>(): io.github.amine2233.networkingmiddle/RequestParameters? // io.github.amine2233.networkingmiddle/AnyRequest.parameters.<get-parameters>|<get-parameters>(){}[0]
+    final val path // io.github.amine2233.networkingmiddle/AnyRequest.path|{}path[0]
+        final fun <get-path>(): kotlin/String // io.github.amine2233.networkingmiddle/AnyRequest.path.<get-path>|<get-path>(){}[0]
+
+    final fun component1(): kotlin/String // io.github.amine2233.networkingmiddle/AnyRequest.component1|component1(){}[0]
+    final fun component2(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/AnyRequest.component2|component2(){}[0]
+    final fun component3(): io.github.amine2233.networkingmiddle/RequestParameters? // io.github.amine2233.networkingmiddle/AnyRequest.component3|component3(){}[0]
+    final fun component4(): io.github.amine2233.networkingmiddle/RequestBody? // io.github.amine2233.networkingmiddle/AnyRequest.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/Map<kotlin/String, kotlin/String> // io.github.amine2233.networkingmiddle/AnyRequest.component5|component5(){}[0]
+    final fun copy(kotlin/String = ..., io.github.amine2233.networkingmiddle/HttpMethod = ..., io.github.amine2233.networkingmiddle/RequestParameters? = ..., io.github.amine2233.networkingmiddle/RequestBody? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): io.github.amine2233.networkingmiddle/AnyRequest // io.github.amine2233.networkingmiddle/AnyRequest.copy|copy(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;io.github.amine2233.networkingmiddle.RequestParameters?;io.github.amine2233.networkingmiddle.RequestBody?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.amine2233.networkingmiddle/AnyRequest.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.amine2233.networkingmiddle/AnyRequest.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.amine2233.networkingmiddle/AnyRequest.toString|toString(){}[0]
+}
+
+final class io.github.amine2233.networkingmiddle/AnyResponse : io.github.amine2233.networkingmiddle/Response { // io.github.amine2233.networkingmiddle/AnyResponse|null[0]
+    constructor <init>(io.github.amine2233.networkingmiddle/Response) // io.github.amine2233.networkingmiddle/AnyResponse.<init>|<init>(io.github.amine2233.networkingmiddle.Response){}[0]
+    constructor <init>(io.github.amine2233.networkingmiddle/UrlRequest, kotlin/ByteArray?, kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>>, kotlin/Int, kotlin/Throwable?) // io.github.amine2233.networkingmiddle/AnyResponse.<init>|<init>(io.github.amine2233.networkingmiddle.UrlRequest;kotlin.ByteArray?;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.Int;kotlin.Throwable?){}[0]
+
+    final val body // io.github.amine2233.networkingmiddle/AnyResponse.body|{}body[0]
+        final fun <get-body>(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/AnyResponse.body.<get-body>|<get-body>(){}[0]
+    final val error // io.github.amine2233.networkingmiddle/AnyResponse.error|{}error[0]
+        final fun <get-error>(): kotlin/Throwable? // io.github.amine2233.networkingmiddle/AnyResponse.error.<get-error>|<get-error>(){}[0]
+    final val headers // io.github.amine2233.networkingmiddle/AnyResponse.headers|{}headers[0]
+        final fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // io.github.amine2233.networkingmiddle/AnyResponse.headers.<get-headers>|<get-headers>(){}[0]
+    final val request // io.github.amine2233.networkingmiddle/AnyResponse.request|{}request[0]
+        final fun <get-request>(): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/AnyResponse.request.<get-request>|<get-request>(){}[0]
+    final val statusCode // io.github.amine2233.networkingmiddle/AnyResponse.statusCode|{}statusCode[0]
+        final fun <get-statusCode>(): kotlin/Int // io.github.amine2233.networkingmiddle/AnyResponse.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.amine2233.networkingmiddle/AnyResponse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.amine2233.networkingmiddle/AnyResponse.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.amine2233.networkingmiddle/AnyResponse.toString|toString(){}[0]
+}
+
+final class io.github.amine2233.networkingmiddle/HttpMethod { // io.github.amine2233.networkingmiddle/HttpMethod|null[0]
+    constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/HttpMethod.<init>|<init>(kotlin.String){}[0]
+
+    final val rawValue // io.github.amine2233.networkingmiddle/HttpMethod.rawValue|{}rawValue[0]
+        final fun <get-rawValue>(): kotlin/String // io.github.amine2233.networkingmiddle/HttpMethod.rawValue.<get-rawValue>|<get-rawValue>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.amine2233.networkingmiddle/HttpMethod.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.amine2233.networkingmiddle/HttpMethod.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.amine2233.networkingmiddle/HttpMethod.toString|toString(){}[0]
+
+    final object Companion { // io.github.amine2233.networkingmiddle/HttpMethod.Companion|null[0]
+        final val Delete // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Delete|{}Delete[0]
+            final fun <get-Delete>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Delete.<get-Delete>|<get-Delete>(){}[0]
+        final val Get // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Get|{}Get[0]
+            final fun <get-Get>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Get.<get-Get>|<get-Get>(){}[0]
+        final val Head // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Head|{}Head[0]
+            final fun <get-Head>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Head.<get-Head>|<get-Head>(){}[0]
+        final val Patch // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Patch|{}Patch[0]
+            final fun <get-Patch>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Patch.<get-Patch>|<get-Patch>(){}[0]
+        final val Post // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Post|{}Post[0]
+            final fun <get-Post>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Post.<get-Post>|<get-Post>(){}[0]
+        final val Put // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Put|{}Put[0]
+            final fun <get-Put>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/HttpMethod.Companion.Put.<get-Put>|<get-Put>(){}[0]
+    }
+}
+
+final class io.github.amine2233.networkingmiddle/UrlRequest { // io.github.amine2233.networkingmiddle/UrlRequest|null[0]
+    constructor <init>(kotlin/String, io.github.amine2233.networkingmiddle/HttpMethod = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ..., kotlin/ByteArray? = ...) // io.github.amine2233.networkingmiddle/UrlRequest.<init>|<init>(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;kotlin.collections.Map<kotlin.String,kotlin.String>;kotlin.ByteArray?){}[0]
+
+    final val body // io.github.amine2233.networkingmiddle/UrlRequest.body|{}body[0]
+        final fun <get-body>(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/UrlRequest.body.<get-body>|<get-body>(){}[0]
+    final val headers // io.github.amine2233.networkingmiddle/UrlRequest.headers|{}headers[0]
+        final fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin/String> // io.github.amine2233.networkingmiddle/UrlRequest.headers.<get-headers>|<get-headers>(){}[0]
+    final val method // io.github.amine2233.networkingmiddle/UrlRequest.method|{}method[0]
+        final fun <get-method>(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/UrlRequest.method.<get-method>|<get-method>(){}[0]
+    final val url // io.github.amine2233.networkingmiddle/UrlRequest.url|{}url[0]
+        final fun <get-url>(): kotlin/String // io.github.amine2233.networkingmiddle/UrlRequest.url.<get-url>|<get-url>(){}[0]
+
+    final fun appendingQuery(kotlin.collections/Map<kotlin/String, kotlin/String>): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/UrlRequest.appendingQuery|appendingQuery(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final fun component1(): kotlin/String // io.github.amine2233.networkingmiddle/UrlRequest.component1|component1(){}[0]
+    final fun component2(): io.github.amine2233.networkingmiddle/HttpMethod // io.github.amine2233.networkingmiddle/UrlRequest.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/Map<kotlin/String, kotlin/String> // io.github.amine2233.networkingmiddle/UrlRequest.component3|component3(){}[0]
+    final fun component4(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/UrlRequest.component4|component4(){}[0]
+    final fun copy(kotlin/String = ..., io.github.amine2233.networkingmiddle/HttpMethod = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ..., kotlin/ByteArray? = ...): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/UrlRequest.copy|copy(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;kotlin.collections.Map<kotlin.String,kotlin.String>;kotlin.ByteArray?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.amine2233.networkingmiddle/UrlRequest.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.amine2233.networkingmiddle/UrlRequest.hashCode|hashCode(){}[0]
+    final fun setHeader(kotlin/String, kotlin/String): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/UrlRequest.setHeader|setHeader(kotlin.String;kotlin.String){}[0]
+    final fun toString(): kotlin/String // io.github.amine2233.networkingmiddle/UrlRequest.toString|toString(){}[0]
+
+    final object Companion // io.github.amine2233.networkingmiddle/UrlRequest.Companion|null[0]
+}
+
+final class io.github.amine2233.networkingmiddle/UrlResponse { // io.github.amine2233.networkingmiddle/UrlResponse|null[0]
+    constructor <init>(kotlin/Int, kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> = ..., kotlin/ByteArray? = ...) // io.github.amine2233.networkingmiddle/UrlResponse.<init>|<init>(kotlin.Int;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.ByteArray?){}[0]
+
+    final val body // io.github.amine2233.networkingmiddle/UrlResponse.body|{}body[0]
+        final fun <get-body>(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/UrlResponse.body.<get-body>|<get-body>(){}[0]
+    final val headers // io.github.amine2233.networkingmiddle/UrlResponse.headers|{}headers[0]
+        final fun <get-headers>(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // io.github.amine2233.networkingmiddle/UrlResponse.headers.<get-headers>|<get-headers>(){}[0]
+    final val statusCode // io.github.amine2233.networkingmiddle/UrlResponse.statusCode|{}statusCode[0]
+        final fun <get-statusCode>(): kotlin/Int // io.github.amine2233.networkingmiddle/UrlResponse.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
+
+    final fun component1(): kotlin/Int // io.github.amine2233.networkingmiddle/UrlResponse.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // io.github.amine2233.networkingmiddle/UrlResponse.component2|component2(){}[0]
+    final fun component3(): kotlin/ByteArray? // io.github.amine2233.networkingmiddle/UrlResponse.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> = ..., kotlin/ByteArray? = ...): io.github.amine2233.networkingmiddle/UrlResponse // io.github.amine2233.networkingmiddle/UrlResponse.copy|copy(kotlin.Int;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.ByteArray?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.amine2233.networkingmiddle/UrlResponse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.amine2233.networkingmiddle/UrlResponse.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.amine2233.networkingmiddle/UrlResponse.toString|toString(){}[0]
+}
+
+sealed class io.github.amine2233.networkingmiddle/ApiError : kotlin/Exception { // io.github.amine2233.networkingmiddle/ApiError|null[0]
+    final class Api : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Api|null[0]
+        constructor <init>(kotlin/String?, kotlin/Int?) // io.github.amine2233.networkingmiddle/ApiError.Api.<init>|<init>(kotlin.String?;kotlin.Int?){}[0]
+
+        final val statusCode // io.github.amine2233.networkingmiddle/ApiError.Api.statusCode|{}statusCode[0]
+            final fun <get-statusCode>(): kotlin/Int? // io.github.amine2233.networkingmiddle/ApiError.Api.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
+    }
+
+    final class Body : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Body|null[0]
+        constructor <init>(kotlin/Throwable) // io.github.amine2233.networkingmiddle/ApiError.Body.<init>|<init>(kotlin.Throwable){}[0]
+    }
+
+    final class CertificatePinningFailed : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.CertificatePinningFailed|null[0]
+        constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/ApiError.CertificatePinningFailed.<init>|<init>(kotlin.String){}[0]
+    }
+
+    final class Client : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Client|null[0]
+        constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/ApiError.Client.<init>|<init>(kotlin.String){}[0]
+    }
+
+    final class CreateQueryParameter : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.CreateQueryParameter|null[0]
+        constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/ApiError.CreateQueryParameter.<init>|<init>(kotlin.String){}[0]
+    }
+
+    final class InvalidUrl : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.InvalidUrl|null[0]
+        constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/ApiError.InvalidUrl.<init>|<init>(kotlin.String){}[0]
+    }
+
+    final class Parser : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Parser|null[0]
+        constructor <init>(kotlin/Throwable) // io.github.amine2233.networkingmiddle/ApiError.Parser.<init>|<init>(kotlin.Throwable){}[0]
+    }
+
+    final class RequestParameters : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.RequestParameters|null[0]
+        constructor <init>(kotlin/Throwable) // io.github.amine2233.networkingmiddle/ApiError.RequestParameters.<init>|<init>(kotlin.Throwable){}[0]
+    }
+
+    final class Response : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Response|null[0]
+        constructor <init>(kotlin/String) // io.github.amine2233.networkingmiddle/ApiError.Response.<init>|<init>(kotlin.String){}[0]
+    }
+
+    final class StatusCode : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.StatusCode|null[0]
+        constructor <init>() // io.github.amine2233.networkingmiddle/ApiError.StatusCode.<init>|<init>(){}[0]
+    }
+
+    final class Unauthenticated : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Unauthenticated|null[0]
+        constructor <init>() // io.github.amine2233.networkingmiddle/ApiError.Unauthenticated.<init>|<init>(){}[0]
+    }
+
+    final class Unauthorized : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Unauthorized|null[0]
+        constructor <init>() // io.github.amine2233.networkingmiddle/ApiError.Unauthorized.<init>|<init>(){}[0]
+    }
+
+    final class Unknown : io.github.amine2233.networkingmiddle/ApiError { // io.github.amine2233.networkingmiddle/ApiError.Unknown|null[0]
+        constructor <init>() // io.github.amine2233.networkingmiddle/ApiError.Unknown.<init>|<init>(){}[0]
+    }
+}
+
+final object io.github.amine2233.networkingmiddle/InterceptorFactory { // io.github.amine2233.networkingmiddle/InterceptorFactory|null[0]
+    final fun bearerAuth(kotlin.coroutines/SuspendFunction0<kotlin/String?>, kotlin.coroutines/SuspendFunction1<kotlin/String?, kotlin/String?>, kotlin/Function1<io.github.amine2233.networkingmiddle/Response, kotlin/Boolean> = ...): io.github.amine2233.networkingmiddle/Interceptor // io.github.amine2233.networkingmiddle/InterceptorFactory.bearerAuth|bearerAuth(kotlin.coroutines.SuspendFunction0<kotlin.String?>;kotlin.coroutines.SuspendFunction1<kotlin.String?,kotlin.String?>;kotlin.Function1<io.github.amine2233.networkingmiddle.Response,kotlin.Boolean>){}[0]
+    final fun interceptorLogger(kotlin/Function1<kotlin/String, kotlin/Unit>): io.github.amine2233.networkingmiddle/Interceptor // io.github.amine2233.networkingmiddle/InterceptorFactory.interceptorLogger|interceptorLogger(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+    final fun interceptorTimeLogger(kotlin/Function1<kotlin/String, kotlin/Unit>): io.github.amine2233.networkingmiddle/Interceptor // io.github.amine2233.networkingmiddle/InterceptorFactory.interceptorTimeLogger|interceptorTimeLogger(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+}
+
+final object io.github.amine2233.networkingmiddle/NetworkProviderFactory { // io.github.amine2233.networkingmiddle/NetworkProviderFactory|null[0]
+    final fun create(io.github.amine2233.networkingmiddle/NetworkService, kotlin.collections/List<io.github.amine2233.networkingmiddle/RequestModifier> = ..., kotlin.collections/List<io.github.amine2233.networkingmiddle/Interceptor> = ...): io.github.amine2233.networkingmiddle/NetworkProvider // io.github.amine2233.networkingmiddle/NetworkProviderFactory.create|create(io.github.amine2233.networkingmiddle.NetworkService;kotlin.collections.List<io.github.amine2233.networkingmiddle.RequestModifier>;kotlin.collections.List<io.github.amine2233.networkingmiddle.Interceptor>){}[0]
+}
+
+final object io.github.amine2233.networkingmiddle/RequestBodyFactory { // io.github.amine2233.networkingmiddle/RequestBodyFactory|null[0]
+    final fun <#A1: kotlin/Any?> encodableBody(#A1, kotlinx.serialization/KSerializer<#A1>, kotlinx.serialization.json/Json = ...): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.encodableBody|encodableBody(0:0;kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun dataBody(kotlin/ByteArray): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.dataBody|dataBody(kotlin.ByteArray){}[0]
+    final fun formBody(kotlin.collections/Map<kotlin/String, kotlin/Any>): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.formBody|formBody(kotlin.collections.Map<kotlin.String,kotlin.Any>){}[0]
+    final fun jsonBody(kotlinx.serialization.json/JsonElement, kotlinx.serialization.json/Json = ...): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.jsonBody|jsonBody(kotlinx.serialization.json.JsonElement;kotlinx.serialization.json.Json){}[0]
+    final fun stringBody(kotlin/String): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.stringBody|stringBody(kotlin.String){}[0]
+    final inline fun <#A1: reified kotlin/Any?> encodableBody(#A1, kotlinx.serialization.json/Json = ...): io.github.amine2233.networkingmiddle/RequestBody // io.github.amine2233.networkingmiddle/RequestBodyFactory.encodableBody|encodableBody(0:0;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+}
+
+final object io.github.amine2233.networkingmiddle/RequestFactory { // io.github.amine2233.networkingmiddle/RequestFactory|null[0]
+    final fun create(kotlin/String, io.github.amine2233.networkingmiddle/HttpMethod, io.github.amine2233.networkingmiddle/RequestParameters? = ..., io.github.amine2233.networkingmiddle/RequestBody? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/RequestFactory.create|create(kotlin.String;io.github.amine2233.networkingmiddle.HttpMethod;io.github.amine2233.networkingmiddle.RequestParameters?;io.github.amine2233.networkingmiddle.RequestBody?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+}
+
+final object io.github.amine2233.networkingmiddle/RequestModifierFactory { // io.github.amine2233.networkingmiddle/RequestModifierFactory|null[0]
+    final fun bearerToken(kotlin/String): io.github.amine2233.networkingmiddle/RequestModifier // io.github.amine2233.networkingmiddle/RequestModifierFactory.bearerToken|bearerToken(kotlin.String){}[0]
+    final fun header(kotlin/String, kotlin/String): io.github.amine2233.networkingmiddle/RequestModifier // io.github.amine2233.networkingmiddle/RequestModifierFactory.header|header(kotlin.String;kotlin.String){}[0]
+    final fun token(kotlin/String): io.github.amine2233.networkingmiddle/RequestModifier // io.github.amine2233.networkingmiddle/RequestModifierFactory.token|token(kotlin.String){}[0]
+}
+
+final object io.github.amine2233.networkingmiddle/RequestParametersFactory { // io.github.amine2233.networkingmiddle/RequestParametersFactory|null[0]
+    final fun <#A1: kotlin/Any?> queryEncodableParameters(#A1, kotlinx.serialization/KSerializer<#A1>, kotlinx.serialization.json/Json = ...): io.github.amine2233.networkingmiddle/RequestParameters // io.github.amine2233.networkingmiddle/RequestParametersFactory.queryEncodableParameters|queryEncodableParameters(0:0;kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun queryParameters(kotlin.collections/Map<kotlin/String, kotlin/String>): io.github.amine2233.networkingmiddle/RequestParameters // io.github.amine2233.networkingmiddle/RequestParametersFactory.queryParameters|queryParameters(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final fun stringRequestParameters(kotlin/String): io.github.amine2233.networkingmiddle/RequestParameters // io.github.amine2233.networkingmiddle/RequestParametersFactory.stringRequestParameters|stringRequestParameters(kotlin.String){}[0]
+    final inline fun <#A1: reified kotlin/Any?> queryEncodableParameters(#A1, kotlinx.serialization.json/Json = ...): io.github.amine2233.networkingmiddle/RequestParameters // io.github.amine2233.networkingmiddle/RequestParametersFactory.queryEncodableParameters|queryEncodableParameters(0:0;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+}
+
+final val io.github.amine2233.networkingmiddle/description // io.github.amine2233.networkingmiddle/description|@io.github.amine2233.networkingmiddle.Response{}description[0]
+    final fun (io.github.amine2233.networkingmiddle/Response).<get-description>(): kotlin/String // io.github.amine2233.networkingmiddle/description.<get-description>|<get-description>@io.github.amine2233.networkingmiddle.Response(){}[0]
+
+final fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/authorised(kotlin/String): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/authorised|authorised@io.github.amine2233.networkingmiddle.Request(kotlin.String){}[0]
+final fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/bearer(kotlin/String): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/bearer|bearer@io.github.amine2233.networkingmiddle.Request(kotlin.String){}[0]
+final fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/setHeader(kotlin/String, kotlin/String?): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/setHeader|setHeader@io.github.amine2233.networkingmiddle.Request(kotlin.String;kotlin.String?){}[0]
+final fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/toAnyRequest(): io.github.amine2233.networkingmiddle/AnyRequest // io.github.amine2233.networkingmiddle/toAnyRequest|toAnyRequest@io.github.amine2233.networkingmiddle.Request(){}[0]
+final fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/token(kotlin/String): io.github.amine2233.networkingmiddle/Request // io.github.amine2233.networkingmiddle/token|token@io.github.amine2233.networkingmiddle.Request(kotlin.String){}[0]
+final fun (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/debug(kotlin/Function1<io.github.amine2233.networkingmiddle/Response, kotlin/Unit>): io.github.amine2233.networkingmiddle/Response // io.github.amine2233.networkingmiddle/debug|debug@io.github.amine2233.networkingmiddle.Response(kotlin.Function1<io.github.amine2233.networkingmiddle.Response,kotlin.Unit>){}[0]
+final fun (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/header(kotlin/String): kotlin.collections/List<kotlin/String>? // io.github.amine2233.networkingmiddle/header|header@io.github.amine2233.networkingmiddle.Response(kotlin.String){}[0]
+final fun (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/log(kotlin/Function1<kotlin/String, kotlin/Unit>): io.github.amine2233.networkingmiddle/Response // io.github.amine2233.networkingmiddle/log|log@io.github.amine2233.networkingmiddle.Response(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+final fun (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/result(): kotlin/Result<io.github.amine2233.networkingmiddle/Response> // io.github.amine2233.networkingmiddle/result|result@io.github.amine2233.networkingmiddle.Response(){}[0]
+final fun <#A: io.github.amine2233.networkingmiddle/Response> (#A).io.github.amine2233.networkingmiddle/unauthenticated(): #A // io.github.amine2233.networkingmiddle/unauthenticated|unauthenticated@0:0(){0§<io.github.amine2233.networkingmiddle.Response>}[0]
+final fun <#A: io.github.amine2233.networkingmiddle/Response> (#A).io.github.amine2233.networkingmiddle/unauthorized(): #A // io.github.amine2233.networkingmiddle/unauthorized|unauthorized@0:0(){0§<io.github.amine2233.networkingmiddle.Response>}[0]
+final fun <#A: io.github.amine2233.networkingmiddle/Response> (#A).io.github.amine2233.networkingmiddle/validate(): #A // io.github.amine2233.networkingmiddle/validate|validate@0:0(){0§<io.github.amine2233.networkingmiddle.Response>}[0]
+final fun <#A: io.github.amine2233.networkingmiddle/Response> (#A).io.github.amine2233.networkingmiddle/validate(kotlin/Int): #A // io.github.amine2233.networkingmiddle/validate|validate@0:0(kotlin.Int){0§<io.github.amine2233.networkingmiddle.Response>}[0]
+final fun <#A: io.github.amine2233.networkingmiddle/Response> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/flatMap(kotlin/Function1<io.github.amine2233.networkingmiddle/Response, #A>): #A // io.github.amine2233.networkingmiddle/flatMap|flatMap@io.github.amine2233.networkingmiddle.Response(kotlin.Function1<io.github.amine2233.networkingmiddle.Response,0:0>){0§<io.github.amine2233.networkingmiddle.Response>}[0]
+final fun <#A: kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decode(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.json/Json = ...): #A // io.github.amine2233.networkingmiddle/decode|decode@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeError(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.json/Json = ...): #A // io.github.amine2233.networkingmiddle/decodeError|decodeError@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeErrorResult(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.json/Json = ...): kotlin/Result<#A> // io.github.amine2233.networkingmiddle/decodeErrorResult|decodeErrorResult@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeResult(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.json/Json = ...): kotlin/Result<#A> // io.github.amine2233.networkingmiddle/decodeResult|decodeResult@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/map(kotlin/Function1<io.github.amine2233.networkingmiddle/Response, #A>): #A // io.github.amine2233.networkingmiddle/map|map@io.github.amine2233.networkingmiddle.Response(kotlin.Function1<io.github.amine2233.networkingmiddle.Response,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Throwable> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/mapError(kotlin/Function1<kotlin/Throwable, #A>): kotlin/Result<io.github.amine2233.networkingmiddle/Response> // io.github.amine2233.networkingmiddle/mapError|mapError@io.github.amine2233.networkingmiddle.Response(kotlin.Function1<kotlin.Throwable,0:0>){0§<kotlin.Throwable>}[0]
+final inline fun <#A: reified kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decode(kotlinx.serialization.json/Json = ...): #A // io.github.amine2233.networkingmiddle/decode|decode@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeError(kotlinx.serialization.json/Json = ...): #A // io.github.amine2233.networkingmiddle/decodeError|decodeError@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeErrorResult(kotlinx.serialization.json/Json = ...): kotlin/Result<#A> // io.github.amine2233.networkingmiddle/decodeErrorResult|decodeErrorResult@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (io.github.amine2233.networkingmiddle/Response).io.github.amine2233.networkingmiddle/decodeResult(kotlinx.serialization.json/Json = ...): kotlin/Result<#A> // io.github.amine2233.networkingmiddle/decodeResult|decodeResult@io.github.amine2233.networkingmiddle.Response(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final suspend fun (io.github.amine2233.networkingmiddle/Request).io.github.amine2233.networkingmiddle/asUrlRequest(kotlin/String): io.github.amine2233.networkingmiddle/UrlRequest // io.github.amine2233.networkingmiddle/asUrlRequest|asUrlRequest@io.github.amine2233.networkingmiddle.Request(kotlin.String){}[0]
