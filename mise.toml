@@ -56,6 +56,18 @@ flag "--version <version>" help="Version to publish (e.g. 1.2.3)" required=#true
 '''
 run = './gradlew publish -Pversion="${usage_version?}" --no-daemon'
 
+[tasks.verify-publish]
+description = "Publish both modules to build/local-maven-repo with a test version, check the artifacts and metadata, and compile the kmp-consumer fixture."
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+version="0.0.0-verify"
+rm -rf build/local-maven-repo
+./gradlew publishAllPublicationsToLocalVerifyRepository verifyLocalPublication -Pversion="$version" --no-daemon
+./gradlew -p kmp-consumer compileKotlinJvm compileKotlinIosSimulatorArm64 -PnetworkingMiddleVersion="$version" --no-daemon
+'''
+
 [tasks.release]
 description = "Run semantic-release. Use --dry-run to preview without publishing. The conventionalcommits preset is pinned to 8: @semantic-release/commit-analyzer 13 bundles 8.0.0 and the 10.x preset breaks conventional-changelog-writer 8."
 usage = '''
