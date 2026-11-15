@@ -51,6 +51,9 @@ dependencies {
 }
 ```
 
+Gradle consumers depend on `networking-middle` / `networking-middle-ktor` as above; Gradle picks the JVM variant of the
+Multiplatform core from its metadata. Maven consumers use `io.github.amine2233:networking-middle-jvm` for the core.
+
 ## CI/CD
 
 CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin-ci-shared).
@@ -100,5 +103,5 @@ val provider = NetworkProviderFactory.create(NetworkService { UrlResponse(200, b
 
 ## Android
 
-Plain Kotlin/JVM library, Java 11 bytecode (`-Xjdk-release=11`), no `java.time`/`java.net.http`. Consume it from any Android module
+Kotlin Multiplatform core with a JVM target, Java 11 bytecode (`-Xjdk-release=11`), no `java.time`/`java.net.http`. Consume it from any Android module
 with AGP 8+ (`minSdk 24+` recommended; see [docs/USAGE.md](docs/USAGE.md#android)).

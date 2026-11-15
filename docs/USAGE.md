@@ -125,7 +125,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 ## 8. Android
 
-- The library is plain Kotlin/JVM (Java 17 bytecode). Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")`
+- The core is Kotlin Multiplatform with a single JVM target, compiled to Java 11 bytecode. Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")`
   plus a Ktor engine (`ktor-client-okhttp` or `ktor-client-android`).
 - Compiled with `jvmTarget = 11` and `-Xjdk-release=11`, so no JDK 17-only API (e.g. `URLEncoder.encode(String, Charset)`,
   API 33 on Android) can leak in. Safe on `minSdk 21+`.
@@ -152,7 +152,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 ## 10. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
-   seconds formatting); what remains is converting the build to Kotlin Multiplatform to unlock iOS/JS targets.
+   seconds formatting) and the build is now Kotlin Multiplatform with only a `jvm()` target; adding non-JVM targets
+   (iOS/JS) is the next step.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
