@@ -6,6 +6,18 @@ public interface NetworkProvider {
 
     public fun intercept(action: suspend (baseURL: String, request: Request, next: Next) -> Response): NetworkProvider
 
+    /**
+     * Applies the modifiers, runs the interceptor chain and sends [request] to [baseURL].
+     *
+     * Throws:
+     * - [ApiError.InvalidUrl], [ApiError.RequestParameters] and [ApiError.Body] when the request can't be built.
+     * - `CancellationException` when the calling coroutine is cancelled.
+     * - Anything thrown by a user-supplied modifier or interceptor.
+     *
+     * Returns inside the [Response]:
+     * - Transport failures, as `statusCode = 499` with `error` set; [validate] rethrows them.
+     * - Every HTTP status, 4xx and 5xx included.
+     */
     public suspend fun request(
         baseURL: String,
         request: Request,

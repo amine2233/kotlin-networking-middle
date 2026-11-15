@@ -1,6 +1,8 @@
 package io.github.amine2233.networkingmiddle
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.builtins.serializer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -39,6 +41,52 @@ class ResponseTest {
         assertIs<ApiError.Parser>(result.exceptionOrNull())
         assertTrue(response().decodeResult<User>().isSuccess)
         assertIs<ApiError.Response>(response(body = null).decodeResult<User>().exceptionOrNull())
+    }
+
+    @Test
+    fun `decode throws ApiError Parser on bad json`() {
+        val error = assertFailsWith<ApiError.Parser> { response(body = "not json").decode<User>() }
+        assertIs<SerializationException>(error.cause)
+    }
+
+    @Test
+    fun `decodeError throws ApiError Parser on bad json`() {
+        val error = assertFailsWith<ApiError.Parser> { response(body = "not json").decodeError<User>() }
+        assertIs<SerializationException>(error.cause)
+    }
+
+    @Test
+    fun `decode Unit succeeds on a null body`() {
+        val noContent = ResponseDefault(urlRequest, 204, null)
+        assertEquals(Unit, noContent.decode<Unit>())
+        assertTrue(noContent.decodeResult<Unit>().isSuccess)
+        assertEquals(Unit, noContent.decodeError<Unit>())
+        assertTrue(noContent.decodeErrorResult<Unit>().isSuccess)
+    }
+
+    @Test
+    fun `decode Unit with an explicit serializer succeeds on a null body`() {
+        val noContent = ResponseDefault(urlRequest, 204, null)
+        assertEquals(Unit, noContent.decode(Unit.serializer()))
+        assertTrue(noContent.decodeResult(Unit.serializer()).isSuccess)
+    }
+
+    @Test
+    fun `decode Unit succeeds on an empty body`() {
+        val noContent = ResponseDefault(urlRequest, 204, ByteArray(0))
+        assertEquals(Unit, noContent.decode<Unit>())
+        assertTrue(noContent.decodeResult<Unit>().isSuccess)
+    }
+
+    @Test
+    fun `decode Unit ignores a non-empty body`() {
+        assertEquals(Unit, response(body = """{"ok":true}""").decode<Unit>())
+        assertTrue(response(body = "not json").decodeResult<Unit>().isSuccess)
+    }
+
+    @Test
+    fun `decode of a model from an empty body throws ApiError Parser`() {
+        assertFailsWith<ApiError.Parser> { ResponseDefault(urlRequest, 204, ByteArray(0)).decode<User>() }
     }
 
     @Test

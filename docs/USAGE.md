@@ -13,7 +13,7 @@
 | `RequestBody` / `Factory`          | same, `suspend fun apply`                                 | `encodableBody`, `formBody`, `jsonBody(JsonElement)`, `stringBody`, `dataBody`. |
 | `RequestModifier` (inout)          | `fun interface RequestModifier { fun modify(baseURL, request): Request }` | Returns the new request instead of mutating. |
 | `Interceptor` + `Next`             | `fun interface Interceptor`, `typealias Next = suspend (String, Request) -> Response` | |
-| `Response` + extensions            | same names: `validate`, `decode`, `decodeResult`, `decodeError`, `decodeErrorResult`, `map`, `flatMap`, `result`, `mapError`, `log`, `debug`, `unauthenticated`, `unauthorized`, `validate(statusCode)`, `description`, plus `header(name)` (case-insensitive) | `JSONDecoder` → `Json`. `decode<Unit>()` replaces `EmptyDecodable`. |
+| `Response` + extensions            | same names: `validate`, `decode`, `decodeResult`, `decodeError`, `decodeErrorResult`, `map`, `flatMap`, `result`, `mapError`, `log`, `debug`, `unauthenticated`, `unauthorized`, `validate(statusCode)`, `description`, plus `header(name)` (case-insensitive) | `JSONDecoder` → `Json`. `decode<Unit>()` replaces `EmptyDecodable` and succeeds on a null or empty body. |
 | `APIError` + `RequestError`        | `sealed class ApiError`                                   | Folded into one type (`ApiError.InvalidUrl` replaces `RequestError.invalidURL`). |
 
 ## 2. Flow
@@ -43,7 +43,7 @@ val provider = NetworkProviderFactory.create(client.asNetworkService())
 - `expectSuccess = true` on the client is harmless: 4xx/5xx are still returned as a `Response`, never thrown.
 - Transport failures (`IOException`, timeouts) become a `Response` with `statusCode = 499` and `error` set; `validate()` rethrows them.
 - Cancelling the calling coroutine always propagates `CancellationException`, even if the engine reports it as an `IOException`.
-- Empty bodies map to `body == null` (URLSession gives empty `Data`), so `decode()` on a 204 throws `ApiError.Response`.
+- Empty bodies map to `body == null` (URLSession gives empty `Data`), so `decode<Unit>()` on a 204 returns `Unit`, while decoding any other model from a 204 throws `ApiError.Response`.
 - `stringBody`/`dataBody` set no `Content-Type`; Ktor then sends `application/octet-stream`. Add a header if the server cares.
 - `dataBody` copies its input when called, so later changes to the source array do not affect the request; `body` arrays on `UrlRequest`, `UrlResponse` and `Response` must not be mutated.
 
@@ -75,7 +75,7 @@ RequestFactory.create("/me", HttpMethod.Get).authorised(bearer = "token")
 val response = provider.request(baseURL, request)
 
 response.validate()                     // throws the transport error (IOException, …)
-response.decode<User>()                 // ApiError.Response if body == null, SerializationException on bad JSON
+response.decode<User>()                 // ApiError.Response if body == null, ApiError.Parser on bad JSON
 response.decodeResult<User>()           // Result<User>, parser failures wrapped in ApiError.Parser
 response.unauthenticated()              // throws ApiError.Unauthenticated on 401
 response.unauthorized()                 // throws ApiError.Unauthorized on 403
@@ -141,7 +141,6 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 | `NetworkingMiddleTesting` robots        | not ported                                          | `NetworkService { … }` lambda covers stubbing. |
 | `NetworkingMiddleMocking` (MockingBird) | not ported                                          | Ktor `MockEngine` covers it. |
 | `NetworkingMiddlePinning`               | not ported                                          | Pinning is engine configuration in Ktor. |
-| `EmptyDecodable`                        | not ported                                          | `decode<JsonObject>().isEmpty()` covers it. |
 
 ## 10. Roadmap / next iterations
 
