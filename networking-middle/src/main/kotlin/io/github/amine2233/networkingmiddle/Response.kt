@@ -2,12 +2,15 @@ package io.github.amine2233.networkingmiddle
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
 /** The result of a network call: body, headers, status code and potential transport error. */
 public interface Response {
     public val request: UrlRequest
+
+    /** The raw response body. Callers and implementers must not mutate this array. */
     public val body: ByteArray?
     public val headers: Map<String, List<String>>
     public val statusCode: Int
@@ -73,7 +76,15 @@ private const val NULL_ERROR_BODY = "Unable to decode error from a `Response`; b
 /** Throws the transport error if present. */
 public fun <R : Response> R.validate(): R = error?.let { throw it } ?: this
 
-/** Decodes the body with kotlinx.serialization. `decode<Unit>()` is the equivalent of Swift's `EmptyDecodable`. */
+/**
+ * Decodes the body with kotlinx.serialization.
+ *
+ * Bad or mismatched JSON throws [ApiError.Parser] with the `SerializationException` as cause; a `null` body throws
+ * [ApiError.Response]. `decode<Unit>()` succeeds on a `null` or empty body (the equivalent of Swift's `EmptyDecodable`).
+ *
+ * Decoding is blocking, CPU-bound work and is not main-safe: the caller chooses the dispatcher,
+ * for example `withContext(Dispatchers.Default)`.
+ */
 public fun <Model> Response.decode(
     serializer: KSerializer<Model>,
     json: Json = Json,
@@ -81,6 +92,14 @@ public fun <Model> Response.decode(
 
 public inline fun <reified Model> Response.decode(json: Json = Json): Model = decode(serializer<Model>(), json)
 
+/**
+ * Decodes the body like [decode], but returns failures instead of throwing them: bad or mismatched JSON is a failure
+ * holding [ApiError.Parser], a `null` body a failure holding [ApiError.Response]. `decodeResult<Unit>()` succeeds on a
+ * `null` or empty body.
+ *
+ * Decoding is blocking, CPU-bound work and is not main-safe: the caller chooses the dispatcher,
+ * for example `withContext(Dispatchers.Default)`.
+ */
 public fun <Model> Response.decodeResult(
     serializer: KSerializer<Model>,
     json: Json = Json,
@@ -108,8 +127,13 @@ private fun <Model> Response.decode(
     json: Json,
     nullMessage: String,
 ): Model {
+    if (serializer.isUnit()) return unit()
     val data = body ?: throw ApiError.Response(nullMessage)
-    return json.decodeFromString(serializer, data.decodeToString())
+    return try {
+        json.decodeFromString(serializer, data.decodeToString())
+    } catch (error: SerializationException) {
+        throw ApiError.Parser(error)
+    }
 }
 
 private fun <Model> Response.decodeResult(
@@ -117,15 +141,20 @@ private fun <Model> Response.decodeResult(
     json: Json,
     nullMessage: String,
 ): Result<Model> {
+    if (serializer.isUnit()) return Result.success(unit())
     val data = body ?: return Result.failure(ApiError.Response(nullMessage))
     return try {
         Result.success(json.decodeFromString(serializer, data.decodeToString()))
     } catch (error: SerializationException) {
         Result.failure(ApiError.Parser(error))
-    } catch (error: IllegalArgumentException) {
-        Result.failure(ApiError.Parser(error))
     }
 }
+
+private fun KSerializer<*>.isUnit(): Boolean = descriptor == Unit.serializer().descriptor
+
+// Only called after isUnit(), so Model is Unit.
+@Suppress("UNCHECKED_CAST")
+private fun <Model> unit(): Model = Unit as Model
 
 public fun <Model> Response.map(transform: (Response) -> Model): Model = transform(this)
 
