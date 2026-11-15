@@ -58,4 +58,26 @@ class RequestParametersTest {
         assertEquals("https://a/b?k=v", UrlRequest("https://a/b?").appendingQuery(mapOf("k" to "v")).url)
         assertEquals("https://a/b?k%2F=%C3%A9%2B%3D", UrlRequest("https://a/b").appendingQuery(mapOf("k/" to "é+=")).url)
     }
+
+    @Test
+    fun `stringRequestParameters decodes before re-encoding`() {
+        assertEquals("https://api.test/items?q=a%20b", RequestParametersFactory.stringRequestParameters("q=a%20b").apply(base).url)
+        assertEquals("https://api.test/items?a%26b=c%3Dd", RequestParametersFactory.stringRequestParameters("a%26b=c%3Dd").apply(base).url)
+    }
+
+    @Test
+    fun `stringRequestParameters keeps a literal plus`() {
+        assertEquals("https://api.test/items?q=a%2Bb", RequestParametersFactory.stringRequestParameters("q=a+b").apply(base).url)
+    }
+
+    @Test
+    fun `stringRequestParameters keeps a malformed escape as written`() {
+        assertEquals("https://api.test/items?q=100%25", RequestParametersFactory.stringRequestParameters("q=100%").apply(base).url)
+        assertEquals("https://api.test/items?q=%25zz", RequestParametersFactory.stringRequestParameters("q=%zz").apply(base).url)
+    }
+
+    @Test
+    fun `stringRequestParameters keeps the last duplicate key`() {
+        assertEquals("https://api.test/items?k=2", RequestParametersFactory.stringRequestParameters("k=1&k=2").apply(base).url)
+    }
 }
