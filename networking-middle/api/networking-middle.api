@@ -112,6 +112,8 @@ public abstract interface class io/github/amine2233/networkingmiddle/Interceptor
 
 public final class io/github/amine2233/networkingmiddle/InterceptorFactory {
 	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/InterceptorFactory;
+	public final fun bearerAuth (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
+	public static synthetic fun bearerAuth$default (Lio/github/amine2233/networkingmiddle/InterceptorFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/Interceptor;
 	public final fun interceptorLogger (Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
 	public final fun interceptorTimeLogger (Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
 }
