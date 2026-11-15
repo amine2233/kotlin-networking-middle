@@ -16,4 +16,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":networking-middle", ":networking-middle-ktor", ":sample", ":android-consumer")
+include(":networking-middle", ":networking-middle-ktor", ":networking-middle-apple", ":sample", ":android-consumer")
