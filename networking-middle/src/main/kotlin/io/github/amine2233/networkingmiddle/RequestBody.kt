@@ -31,7 +31,7 @@ public object RequestBodyFactory {
 
     public fun stringBody(value: String): RequestBody = StringBodyRequest(value)
 
-    public fun dataBody(value: ByteArray): RequestBody = DataBodyRequest(value)
+    public fun dataBody(value: ByteArray): RequestBody = DataBodyRequest(value.copyOf())
 }
 
 private const val CONTENT_TYPE = "Content-Type"
