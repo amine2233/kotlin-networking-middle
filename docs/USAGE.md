@@ -14,7 +14,7 @@
 | `RequestModifier` (inout)          | `fun interface RequestModifier { fun modify(baseURL, request): Request }` | Returns the new request instead of mutating. |
 | `Interceptor` + `Next`             | `fun interface Interceptor`, `typealias Next = suspend (String, Request) -> Response` | |
 | `Response` + extensions            | same names: `validate`, `decode`, `decodeResult`, `decodeError`, `decodeErrorResult`, `map`, `flatMap`, `result`, `mapError`, `log`, `debug`, `unauthenticated`, `unauthorized`, `validate(statusCode)`, `description`, plus `header(name)` (case-insensitive) | `JSONDecoder` → `Json`. `decode<Unit>()` replaces `EmptyDecodable` and succeeds on a null or empty body. |
-| `APIError` + `RequestError`        | `sealed class ApiError`                                   | Folded into one type (`ApiError.InvalidUrl` replaces `RequestError.invalidURL`). |
+| `APIError` + `RequestError`        | `sealed class ApiError`                                   | Folded into one type (`ApiError.InvalidUrl` replaces `RequestError.invalidURL`). `asUrlRequest` throws `ApiError.InvalidUrl` when the URL has whitespace, has no scheme or has an empty host. |
 
 ## 2. Flow
 
@@ -139,7 +139,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 |-----------------------------------------|-----------------------------------------------------|-----|
 | `RequestModifier.modify(inout Request)` | returns `Request`                                   | No `inout` in Kotlin. |
 | `Request.set(_:forHttpHeaderKey:)`      | `Request.setHeader(key, value)`                     | Kotlin has no argument labels; value-before-key reads backwards. |
-| `URLComponents` query encoding          | RFC 3986 percent-encoding (`+`, `/`, `:` encoded)   | Stricter and unambiguous; servers decode both. |
+| `URLComponents` query encoding          | RFC 3986 percent-encoding: only the unreserved set stays literal, so `~` is left as is and `*`, `+`, `/`, `:` are encoded | Stricter and unambiguous; servers decode both. |
 | `NetworkService.dataTask(...)` + `NetworkTask` | `suspend fun execute(...)`                   | Coroutines carry cancellation; no task handle needed. |
 | `NetworkClientConfiguration`            | removed                                             | Empty struct in Swift → YAGNI. |
 | `RequestError`                          | folded into `ApiError`                              | One error type per module. |
@@ -151,8 +151,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 ## 10. Roadmap / next iterations
 
-1. **Kotlin Multiplatform** — the core uses only `java.net.URI`/`URLEncoder` and `String.format` (three call sites);
-   replace with `io.ktor.http.Url`/`encodeURLParameter` (or hand-rolled) to unlock iOS/JS targets.
+1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
+   seconds formatting); what remains is converting the build to Kotlin Multiplatform to unlock iOS/JS targets.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
