@@ -1,6 +1,7 @@
 rootProject.name = "kotlin-networking-middle"
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         mavenCentral()
