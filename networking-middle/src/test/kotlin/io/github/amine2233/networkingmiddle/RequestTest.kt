@@ -1,10 +1,25 @@
 package io.github.amine2233.networkingmiddle
 
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class RequestTest {
     @Test
@@ -73,5 +88,82 @@ class RequestTest {
         assertEquals(request.path, any.path)
         assertEquals(request.method, any.method)
         assertEquals(request.headers, any.headers)
+    }
+
+    @Test
+    fun `asUrlRequest propagates cancellation of a suspended body`() =
+        runTest {
+            val request = RequestFactory.create("/", HttpMethod.Post, body = RequestBody { awaitCancellation() })
+            val run = runCancelled { request }
+
+            assertTrue(run.isCancelled)
+            assertEquals(emptyList(), run.handled)
+        }
+
+    @Test
+    fun `asUrlRequest does not wrap a body failure caused by cancellation`() =
+        runTest {
+            val body =
+                RequestBody {
+                    try {
+                        awaitCancellation()
+                    } catch (error: CancellationException) {
+                        throw IllegalStateException("cancelled", error)
+                    }
+                }
+            val request = RequestFactory.create("/", HttpMethod.Post, body = body)
+            val run = runCancelled { request }
+
+            assertTrue(run.isCancelled)
+            assertEquals(emptyList(), run.handled)
+            assertIs<CancellationException>(run.escaped)
+        }
+
+    @Test
+    fun `asUrlRequest does not wrap a parameters failure caused by cancellation`() =
+        runTest {
+            val run =
+                runCancelled { job ->
+                    val parameters =
+                        RequestParameters {
+                            try {
+                                job.cancel()
+                                job.ensureActive()
+                                it
+                            } catch (error: CancellationException) {
+                                throw IllegalStateException("cancelled", error)
+                            }
+                        }
+                    RequestFactory.create("/", HttpMethod.Get, parameters = parameters)
+                }
+
+            assertTrue(run.isCancelled)
+            assertEquals(emptyList(), run.handled)
+            assertIs<CancellationException>(run.escaped)
+        }
+
+    private class CancelledRun(
+        val isCancelled: Boolean,
+        val handled: List<Throwable>,
+        val escaped: Throwable?,
+    )
+
+    private suspend fun TestScope.runCancelled(makeRequest: (Job) -> Request): CancelledRun {
+        val handled = mutableListOf<Throwable>()
+        val handler = CoroutineExceptionHandler { _, error -> handled += error }
+        val scope = CoroutineScope(SupervisorJob() + StandardTestDispatcher(testScheduler) + handler)
+        var escaped: Throwable? = null
+        val job =
+            scope.launch {
+                try {
+                    makeRequest(coroutineContext.job).asUrlRequest("https://api.test")
+                } catch (error: Throwable) {
+                    escaped = error
+                    throw error
+                }
+            }
+        runCurrent()
+        job.cancelAndJoin()
+        return CancelledRun(job.isCancelled, handled, escaped)
     }
 }
