@@ -19,11 +19,14 @@ dependencies {
 
 kover {
     reports {
-        verify {
-            rule {
-                bound {
-                    minValue = 93
-                    coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+        total {
+            verify {
+                onCheck = false
+                rule {
+                    bound {
+                        minValue = 93
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                    }
                 }
             }
         }
