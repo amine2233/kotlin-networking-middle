@@ -19,12 +19,18 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 Managed by [mise](https://mise.jdx.dev) (JDK, Node, ktlint) — `mise trust && mise install`, then:
 
 ```sh
-mise run test     # unit tests
-mise run lint     # ktlint
-mise run format   # ktlint --format
-mise run build    # full Gradle build
-mise run sample   # run the Ktor sample
+mise run test                  # unit tests
+mise run test-coverage         # unit tests + merged Kover report (build/reports/kover/html) and coverage check
+mise run lint                  # ktlint
+mise run format                # ktlint --format
+mise run build                 # full Gradle build
+mise run build_documentations  # aggregated Dokka HTML docs (build/dokka/html)
+mise run sample                # run the Ktor sample
 ```
+
+`./gradlew build` checks the public API of `networking-middle` and `networking-middle-ktor` against the committed
+`api/*.api` dumps (Kotlin Gradle plugin ABI validation). For an intended API change, run `./gradlew updateKotlinAbi`
+and commit the updated dumps together with the change.
 
 ## Installation
 
@@ -50,7 +56,7 @@ dependencies {
 CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin-ci-shared).
 All logic lives in `mise.toml`:
 
-- `mise run test` / `mise run lint` — what the `CI` workflow runs on pull requests.
+- `mise run test-coverage` / `mise run lint` — what the `CI` workflow runs on pull requests.
 - Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
   `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
   `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
