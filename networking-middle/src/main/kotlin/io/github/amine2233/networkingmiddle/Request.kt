@@ -1,5 +1,9 @@
 package io.github.amine2233.networkingmiddle
 
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+
 /** The HTTP request method types. A plain class (not a value class) so Java/Android callers see real signatures. */
 public class HttpMethod(
     public val rawValue: String,
@@ -52,7 +56,10 @@ public suspend fun Request.asUrlRequest(baseURL: String): UrlRequest {
                 it.apply(urlRequest)
             } catch (error: ApiError) {
                 throw error
+            } catch (error: CancellationException) {
+                throw error
             } catch (error: Exception) {
+                currentCoroutineContext().ensureActive()
                 throw ApiError.RequestParameters(error)
             }
     }
@@ -63,7 +70,10 @@ public suspend fun Request.asUrlRequest(baseURL: String): UrlRequest {
                 it.apply(urlRequest)
             } catch (error: ApiError) {
                 throw error
+            } catch (error: CancellationException) {
+                throw error
             } catch (error: Exception) {
+                currentCoroutineContext().ensureActive()
                 throw ApiError.Body(error)
             }
     }
