@@ -94,13 +94,17 @@ NetworkProviderFactory.create(service, modifiers = listOf(RequestModifierFactory
 InterceptorFactory.interceptorLogger(::println)
 InterceptorFactory.interceptorTimeLogger(::println)
 
-// Refresh-token retry
-provider.intercept { baseURL, request, next ->
-    val response = next(baseURL, request)
-    if (response.statusCode != 401) response
-    else next(baseURL, request.authorised(bearer = refreshToken()))
-}
+// Bearer auth with single-flight token refresh
+val auth =
+    InterceptorFactory.bearerAuth(
+        token = { tokenStore.accessToken },
+        refresh = { failedToken -> authApi.refresh(failedToken)?.also { tokenStore.accessToken = it } },
+    )
+NetworkProviderFactory.create(service, interceptors = listOf(auth))
 ```
+
+`refresh` must store the new token so that later `token()` calls return it. Concurrent 401s for the same token
+trigger a single refresh, each request is retried at most once, and a `null` refresh result returns the original 401.
 
 ## 7. Testing
 
@@ -147,7 +151,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 1. **Kotlin Multiplatform** — the core uses only `java.net.URI`/`URLEncoder` and `String.format` (three call sites);
    replace with `io.ktor.http.Url`/`encodeURLParameter` (or hand-rolled) to unlock iOS/JS targets.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
-3. **Retry / backoff interceptor** and a **refresh-token interceptor** shipped in `InterceptorFactory`.
+3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
 5. **JSON bundle mocking** (MockingBird port) on top of `MockEngine` for offline UI tests.
 6. **Structured logging** — accept a `kotlin.Logger`/SLF4J sink instead of `(String) -> Unit`, plus header redaction.
