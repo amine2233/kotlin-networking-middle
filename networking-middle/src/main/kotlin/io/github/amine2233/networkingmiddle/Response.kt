@@ -9,6 +9,8 @@ import kotlinx.serialization.serializer
 /** The result of a network call: body, headers, status code and potential transport error. */
 public interface Response {
     public val request: UrlRequest
+
+    /** The raw response body. Callers and implementers must not mutate this array. */
     public val body: ByteArray?
     public val headers: Map<String, List<String>>
     public val statusCode: Int

@@ -53,6 +53,15 @@ class RequestBodyTest {
         }
 
     @Test
+    fun `dataBody copies its input`() =
+        runTest {
+            val buf = byteArrayOf(1, 2)
+            val body = RequestBodyFactory.dataBody(buf)
+            buf[0] = 9
+            assertEquals(listOf<Byte>(1, 2), body.apply(base).body?.toList())
+        }
+
+    @Test
     fun `encodableBody failures surface as ApiError Body`() =
         runTest {
             val failing = kotlinx.serialization.json.Json { encodeDefaults = true }

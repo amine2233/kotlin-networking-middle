@@ -45,6 +45,7 @@ val provider = NetworkProviderFactory.create(client.asNetworkService())
 - Cancelling the calling coroutine always propagates `CancellationException`, even if the engine reports it as an `IOException`.
 - Empty bodies map to `body == null` (URLSession gives empty `Data`), so `decode<Unit>()` on a 204 returns `Unit`, while decoding any other model from a 204 throws `ApiError.Response`.
 - `stringBody`/`dataBody` set no `Content-Type`; Ktor then sends `application/octet-stream`. Add a header if the server cares.
+- `dataBody` copies its input when called, so later changes to the source array do not affect the request; `body` arrays on `UrlRequest`, `UrlResponse` and `Response` must not be mutated.
 
 On Android use the `OkHttp` or `Android` Ktor engine instead of `CIO`; nothing else changes.
 
