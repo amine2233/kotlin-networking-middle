@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.kotlin.multiplatform.library")
     `maven-publish`
 }
 
@@ -15,6 +16,15 @@ kotlin {
         testRuns.named("test") {
             executionTask.configure { useJUnitPlatform() }
         }
+    }
+    android {
+        compileSdk = 36
+        minSdk = 24
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+            freeCompilerArgs.add("-Xjdk-release=11")
+        }
+        withHostTest { }
     }
 }
 

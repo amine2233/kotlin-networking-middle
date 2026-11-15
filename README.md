@@ -11,7 +11,7 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 | Module                   | Contents                                                     | Depends on                          |
 |--------------------------|--------------------------------------------------------------|-------------------------------------|
 | `networking-middle`      | `Request`, `Response`, `NetworkProvider`, modifiers, interceptors, `NetworkService` contract | kotlinx-coroutines, kotlinx-serialization-json |
-| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM and the same Apple targets as the core) | `networking-middle`, ktor-client-core |
+| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM, Android and the same Apple targets as the core) | `networking-middle`, ktor-client-core |
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
 Both `networking-middle` and `networking-middle-ktor` also build for iOS and macOS on arm64 (`iosArm64`,
@@ -31,9 +31,13 @@ mise run build_documentations  # aggregated Dokka HTML docs (build/dokka/html)
 mise run sample                # run the Ktor sample
 ```
 
+Building also needs an Android SDK (the libraries have an Android target, `compileSdk 36`). AGP finds it through
+`ANDROID_HOME` or an `sdk.dir` entry in a `local.properties` file at the repo root; `local.properties` is git-ignored and
+must not be committed.
+
 `./gradlew build` checks the public API of `networking-middle` and `networking-middle-ktor` against the committed
-`api/*.api` dumps (Kotlin Gradle plugin ABI validation). Both modules also have a klib dump for their Apple
-targets (`api/*.klib.api`). For an intended API change, run `./gradlew updateKotlinAbi`
+`api/jvm/*.api` and `api/android/*.api` dumps (Kotlin Gradle plugin ABI validation). Both modules also have a klib
+dump for their Apple targets (`api/*.klib.api`). For an intended API change, run `./gradlew updateKotlinAbi`
 and commit the updated dumps together with the change.
 
 ## Installation
@@ -56,7 +60,7 @@ dependencies {
 ```
 
 Gradle consumers depend on `networking-middle` / `networking-middle-ktor` as above; both modules are Kotlin
-Multiplatform with a JVM target, and Gradle picks the JVM variant from their metadata. Maven consumers use
+Multiplatform with JVM and Android targets, and Gradle picks the JVM or Android variant from their metadata. Maven consumers use
 `io.github.amine2233:networking-middle-jvm` for the core and `io.github.amine2233:networking-middle-ktor-jvm` for the
 Ktor adapter.
 
@@ -66,8 +70,11 @@ CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin
 All logic lives in `mise.toml`:
 
 - `mise run test-coverage` / `mise run lint` — what the `CI` workflow runs on pull requests.
-- A second `CI` job runs `./gradlew :networking-middle:allTests :networking-middle-ktor:allTests` on a macOS arm64
-  runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`.
+- The `apple-tests` job of the `CI` workflow runs `./gradlew :networking-middle:allTests :networking-middle-ktor:allTests`
+  on a macOS arm64 runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`.
+- The `android-tests` job of the `CI` workflow runs the Android host tests of both libraries, checks that the
+  `android-consumer` fixture resolves their Android variants and assembles the AARs, using the Android SDK preinstalled
+  on `ubuntu-latest`.
 - Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
   `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
   `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
@@ -126,5 +133,8 @@ val provider = NetworkProviderFactory.create(NetworkService { UrlResponse(200, b
 
 ## Android
 
-Kotlin Multiplatform core and Ktor adapter with a JVM target, Java 11 bytecode (`-Xjdk-release=11`), no `java.time`/`java.net.http`. Consume it from any Android module
-with AGP 8+ (`minSdk 24+` recommended; see [docs/USAGE.md](docs/USAGE.md#android)).
+Kotlin Multiplatform core and Ktor adapter with an Android target: each module publishes an AAR
+(`networking-middle-android`, `networking-middle-ktor-android`) built with `minSdk 24` and Java 11 bytecode, with no
+`java.time`/`java.net.http`. Gradle Android consumers depend on `networking-middle-ktor` as usual and get the AAR
+automatically from the module metadata. Add your own Ktor engine (`ktor-client-okhttp` or `ktor-client-android`); see
+[docs/USAGE.md](docs/USAGE.md#android).
