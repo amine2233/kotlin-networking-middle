@@ -46,7 +46,7 @@ public object RequestFactory {
 /** Resolves the full URL from [baseURL] and applies method, headers, parameters and body. */
 public suspend fun Request.asUrlRequest(baseURL: String): UrlRequest {
     val url = baseURL.appendingPathComponent(path)
-    if (runCatching { java.net.URI(url) }.isFailure) throw ApiError.InvalidUrl(url)
+    if (parseUrlOrNull(url) == null) throw ApiError.InvalidUrl(url)
 
     var urlRequest = UrlRequest(url = url, method = method, headers = headers)
 

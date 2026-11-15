@@ -28,4 +28,17 @@ class InterceptorTest {
             assertEquals(200, response.statusCode)
             assertTrue(Regex("""\[Request]\[Time] \d+\.\d{2} seconds""").matches(logs.single()), logs.single())
         }
+
+    @Test
+    fun `formatSeconds rounds half up to two decimals`() {
+        listOf(
+            0L to "0.00",
+            4L to "0.00",
+            5L to "0.01",
+            1234L to "1.23",
+            1235L to "1.24",
+            999995L to "1000.00",
+            61000L to "61.00",
+        ).forEach { (millis, expected) -> assertEquals(expected, formatSeconds(millis), "formatSeconds($millis)") }
+    }
 }

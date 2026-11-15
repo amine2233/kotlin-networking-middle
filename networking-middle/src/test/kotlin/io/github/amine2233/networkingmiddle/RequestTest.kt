@@ -197,4 +197,16 @@ class RequestTest {
             val contentTypes = headers.filterKeys { it.equals("content-type", ignoreCase = true) }
             assertEquals(listOf("application/vnd.x+json"), contentTypes.values.toList())
         }
+
+    @Test
+    fun `asUrlRequest rejects url without scheme`() =
+        runTest {
+            assertFailsWith<ApiError.InvalidUrl> { RequestFactory.create("/users", HttpMethod.Get).asUrlRequest("api.test") }
+        }
+
+    @Test
+    fun `asUrlRequest rejects url with empty host`() =
+        runTest {
+            assertFailsWith<ApiError.InvalidUrl> { RequestFactory.create("/users", HttpMethod.Get).asUrlRequest("https://:8080") }
+        }
 }

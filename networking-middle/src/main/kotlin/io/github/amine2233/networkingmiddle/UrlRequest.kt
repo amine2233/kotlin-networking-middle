@@ -1,7 +1,5 @@
 package io.github.amine2233.networkingmiddle
 
-import java.net.URLEncoder
-
 /**
  * The platform-neutral equivalent of Foundation's `URLRequest`: what a [NetworkService] executes.
  *
@@ -60,8 +58,6 @@ public data class UrlResponse(
 
     override fun hashCode(): Int = listOf(statusCode, headers, body?.contentHashCode()).hashCode()
 }
-
-internal fun String.urlEncoded(): String = URLEncoder.encode(this, "UTF-8").replace("+", "%20")
 
 internal fun Map<String, String>.withoutHeader(key: String): Map<String, String> = filterKeys { !it.equals(key, ignoreCase = true) }
 
