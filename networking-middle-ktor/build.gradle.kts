@@ -37,11 +37,3 @@ publishing {
         }
     }
 }
-
-// Apple publishing is turned on by item 14 (issue #14).
-tasks.withType<AbstractPublishToMaven>().configureEach {
-    val appleTargets = setOf("iosArm64", "iosSimulatorArm64", "macosArm64")
-    if (publication?.name in appleTargets) {
-        enabled = false
-    }
-}

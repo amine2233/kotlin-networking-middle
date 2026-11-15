@@ -32,6 +32,8 @@ configurations.matching { it.name == "jvmApiElements" || it.name == "jvmRuntimeE
     attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 11)
 }
 
+val localVerifyRepository = rootProject.layout.buildDirectory.dir("local-maven-repo")
+
 publishing {
     publications.withType<MavenPublication>().configureEach {
         pom {
@@ -60,5 +62,19 @@ publishing {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
+        maven {
+            name = "LocalVerify"
+            url = uri(localVerifyRepository.get().asFile)
+        }
     }
+}
+
+tasks.register<VerifyLocalPublication>("verifyLocalPublication") {
+    description = "Checks the artifacts and Gradle module metadata published to build/local-maven-repo."
+    repositoryDirectory.set(localVerifyRepository)
+    publicationGroup.set(provider { project.group.toString() })
+    publicationVersion.set(provider { project.version.toString() })
+    rootArtifactId.set(publishing.publications.named<MavenPublication>("kotlinMultiplatform").map { it.artifactId })
+    artifactIds.set(provider { publishing.publications.withType<MavenPublication>().map { it.artifactId } })
+    mustRunAfter("publishAllPublicationsToLocalVerifyRepository")
 }

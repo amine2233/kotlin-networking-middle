@@ -4,6 +4,7 @@
 name: Release
 
 # Manual only: run it from the Actions tab on `main` when you want to cut a release.
+# The release job runs on macOS so one `./gradlew publish` publishes every KMP target, Apple included.
 on:
   workflow_dispatch:
 
@@ -19,4 +20,6 @@ jobs:
       issues: write
       pull-requests: write
     uses: amine2233/kotlin-ci-shared/.github/workflows/semantic-release.yml@1.0.0
+    with:
+      runner: macos-latest
     secrets: inherit

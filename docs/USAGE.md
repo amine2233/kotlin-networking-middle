@@ -133,12 +133,16 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 - Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
   (`ktor-client-okhttp` or `ktor-client-android`); Gradle picks the Android AAR from the module metadata. Maven
   consumers on the JVM use the `-jvm` artifacts: `io.github.amine2233:networking-middle-jvm` and
-  `io.github.amine2233:networking-middle-ktor-jvm`.
+  `io.github.amine2233:networking-middle-ktor-jvm`. Every per-platform coordinate is in the
+  [README coordinates table](../README.md#installation).
 - Compiled with `jvmTarget = 11` and `-Xjdk-release=11`, so no JDK 17-only API (e.g. `URLEncoder.encode(String, Charset)`,
   API 33 on Android) can leak in. Requires `minSdk 24`.
 - `NetworkService`, `Interceptor` and `RequestBody` are `fun interface`s with `suspend` members: trivial from Kotlin,
   impractical from Java. The library is Kotlin-first.
-- Published to GitHub Packages by the release workflow; `./gradlew publishToMavenLocal -Pversion=x.y.z` for local testing.
+- Every target of both modules is published to GitHub Packages by the release workflow. GitHub Packages needs a token
+  with the `read:packages` scope even to read public packages. For local testing use
+  `./gradlew publishToMavenLocal -Pversion=x.y.z`, or `mise run verify-publish` to publish to `build/local-maven-repo`,
+  check the artifacts and metadata, and compile the `kmp-consumer` fixture against them.
 
 ## 9. Divergences from Swift (intentional)
 
@@ -161,7 +165,7 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
    seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform (Maven
    artifacts `networking-middle-jvm`/`-android` and `networking-middle-ktor-jvm`/`-android`). Both modules have `jvm`,
-   `android`, `iosArm64`, `iosSimulatorArm64` and `macosArm64` targets. Publishing the Apple artifacts is next.
+   `android`, `iosArm64`, `iosSimulatorArm64` and `macosArm64` targets, all published to GitHub Packages.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
