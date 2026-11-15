@@ -46,6 +46,7 @@ val provider = NetworkProviderFactory.create(client.asNetworkService())
 - Empty bodies map to `body == null` (URLSession gives empty `Data`), so `decode<Unit>()` on a 204 returns `Unit`, while decoding any other model from a 204 throws `ApiError.Response`.
 - The body's content type comes from the request's `Content-Type` header (any casing). `stringBody`/`dataBody` set none, so the adapter sends `application/octet-stream` when no `Content-Type` header is present. Add a header if the server cares.
 - Request headers override client defaults such as `DefaultRequest` headers: the request's value replaces the default instead of being sent next to it.
+- Response headers keep the order the server sent them, and lookup by name is case-insensitive (`headers["content-type"]` finds `Content-Type`).
 - A `Content-Type` that Ktor cannot parse fails as `ApiError.Client` before any I/O (through the provider: `statusCode = 499`, `error` set).
 - The adapter never closes the `HttpClient`: the caller owns it and must `close()` it.
 - `dataBody` copies its input when called, so later changes to the source array do not affect the request; `body` arrays on `UrlRequest`, `UrlResponse` and `Response` must not be mutated.
@@ -121,12 +122,14 @@ val service = NetworkService { request ->
 val provider = NetworkProviderFactory.create(service)
 ```
 
-For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-middle-ktor/src/test`.
+For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-middle-ktor/src/commonTest`.
 
 ## 8. Android
 
-- The core is Kotlin Multiplatform with a single JVM target, compiled to Java 11 bytecode. Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")`
-  plus a Ktor engine (`ktor-client-okhttp` or `ktor-client-android`).
+- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a single JVM target, compiled to
+  Java 11 bytecode. Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
+  (`ktor-client-okhttp` or `ktor-client-android`). Maven consumers use the `-jvm` artifacts:
+  `io.github.amine2233:networking-middle-jvm` and `io.github.amine2233:networking-middle-ktor-jvm`.
 - Compiled with `jvmTarget = 11` and `-Xjdk-release=11`, so no JDK 17-only API (e.g. `URLEncoder.encode(String, Charset)`,
   API 33 on Android) can leak in. Safe on `minSdk 21+`.
 - `NetworkService`, `Interceptor` and `RequestBody` are `fun interface`s with `suspend` members: trivial from Kotlin,
@@ -152,7 +155,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 ## 10. Roadmap / next iterations
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
-   seconds formatting) and the build is now Kotlin Multiplatform with only a `jvm()` target; adding non-JVM targets
+   seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform with only
+   a `jvm()` target (Maven artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`); adding non-JVM targets
    (iOS/JS) is the next step.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
