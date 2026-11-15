@@ -11,11 +11,11 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 | Module                   | Contents                                                     | Depends on                          |
 |--------------------------|--------------------------------------------------------------|-------------------------------------|
 | `networking-middle`      | `Request`, `Response`, `NetworkProvider`, modifiers, interceptors, `NetworkService` contract | kotlinx-coroutines, kotlinx-serialization-json |
-| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM target) | `networking-middle`, ktor-client-core |
+| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM and the same Apple targets as the core) | `networking-middle`, ktor-client-core |
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
-The core `networking-middle` also builds for iOS and macOS on arm64 (`iosArm64`, `iosSimulatorArm64`, `macosArm64`).
-The Apple artifacts are not published yet (item 14, issue #14). `networking-middle-ktor` stays JVM-only.
+Both `networking-middle` and `networking-middle-ktor` also build for iOS and macOS on arm64 (`iosArm64`,
+`iosSimulatorArm64`, `macosArm64`). The Apple artifacts of both modules are not published yet (item 14, issue #14).
 
 ## Toolchain
 
@@ -32,8 +32,8 @@ mise run sample                # run the Ktor sample
 ```
 
 `./gradlew build` checks the public API of `networking-middle` and `networking-middle-ktor` against the committed
-`api/*.api` dumps (Kotlin Gradle plugin ABI validation). The core also has a klib dump for its Apple targets
-(`api/*.klib.api`). For an intended API change, run `./gradlew updateKotlinAbi`
+`api/*.api` dumps (Kotlin Gradle plugin ABI validation). Both modules also have a klib dump for their Apple
+targets (`api/*.klib.api`). For an intended API change, run `./gradlew updateKotlinAbi`
 and commit the updated dumps together with the change.
 
 ## Installation
@@ -66,8 +66,8 @@ CI and releases come from [kotlin-ci-shared](https://github.com/amine2233/kotlin
 All logic lives in `mise.toml`:
 
 - `mise run test-coverage` / `mise run lint` — what the `CI` workflow runs on pull requests.
-- A second `CI` job runs `./gradlew :networking-middle:allTests` on a macOS arm64 runner (JVM, macOS and iOS
-  simulator tests) and caches `~/.konan`.
+- A second `CI` job runs `./gradlew :networking-middle:allTests :networking-middle-ktor:allTests` on a macOS arm64
+  runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`.
 - Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
   `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
   `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
@@ -97,6 +97,21 @@ val user: User = provider.request("https://api.example.com", request)
     .validate()          // rethrows transport errors
     .unauthenticated()   // throws ApiError.Unauthenticated on 401
     .decode()            // kotlinx.serialization, reified
+```
+
+The library ships no Ktor engine: the consumer adds the engine for its platform and passes the `HttpClient` in.
+
+| Platform    | Engine           | Artifact                                     |
+|-------------|------------------|----------------------------------------------|
+| iOS / macOS | Darwin           | `ktor-client-darwin`                         |
+| Android     | OkHttp / Android | `ktor-client-okhttp` / `ktor-client-android` |
+| JVM server  | CIO / Java       | `ktor-client-cio` / `ktor-client-java`       |
+
+On iOS and macOS:
+
+```kotlin
+val client = HttpClient(Darwin)
+val provider = NetworkProviderFactory.create(networkService = client.asNetworkService())
 ```
 
 Full walkthrough, API mapping and roadmap: [docs/USAGE.md](docs/USAGE.md).

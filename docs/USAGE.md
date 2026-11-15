@@ -156,8 +156,8 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 1. **Kotlin Multiplatform** — the core no longer uses JVM-only APIs (it has internal percent-encoding, URL parsing and
    seconds formatting) and both `networking-middle` and `networking-middle-ktor` are now Kotlin Multiplatform (Maven
-   artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`). The core has `jvm`, `iosArm64`,
-   `iosSimulatorArm64` and `macosArm64` targets; the Ktor adapter is JVM-only. Publishing the Apple artifacts is next.
+   artifacts `networking-middle-jvm` and `networking-middle-ktor-jvm`). Both modules have `jvm`, `iosArm64`,
+   `iosSimulatorArm64` and `macosArm64` targets. Publishing the Apple artifacts is next.
 2. **Maven Central** — GitHub Packages is wired; add signing + Sonatype only if a public registry is needed.
 3. **Retry / backoff interceptor** in `InterceptorFactory`. The refresh-token interceptor already ships as `InterceptorFactory.bearerAuth`.
 4. **Certificate pinning helper** for the Ktor OkHttp/CIO engines, mirroring `NetworkingMiddlePinning`.
