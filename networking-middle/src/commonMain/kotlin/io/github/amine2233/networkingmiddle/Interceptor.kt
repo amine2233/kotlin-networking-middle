@@ -9,6 +9,7 @@ public typealias Next = suspend (baseURL: String, request: Request) -> Response
 
 /** Intercepts a request on its way to the [NetworkService] and the response on its way back. */
 public fun interface Interceptor {
+    @Throws(Throwable::class)
     public suspend fun intercept(
         baseURL: String,
         request: Request,

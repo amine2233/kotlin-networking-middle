@@ -42,6 +42,7 @@ public class NetworkServiceKtor(
         }
     }
 
+    @Throws(Throwable::class)
     override suspend fun execute(request: UrlRequest): UrlResponse {
         val content = request.body?.let { ByteArrayContent(it, request.bodyContentType()) }
         val overrides = request.headers.filterKeys { !it.equals(HttpHeaders.ContentType, ignoreCase = true) }

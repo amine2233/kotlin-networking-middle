@@ -1,5 +1,7 @@
 package io.github.amine2233.networkingmiddle
 
+import kotlin.coroutines.cancellation.CancellationException
+
 /** The main entry point: builds, modifies, intercepts and sends requests. */
 public interface NetworkProvider {
     public fun modifyRequests(action: (baseURL: String, request: Request) -> Request): NetworkProvider
@@ -18,6 +20,7 @@ public interface NetworkProvider {
      * - Transport failures, as `statusCode = 499` with `error` set; [validate] rethrows them.
      * - Every HTTP status, 4xx and 5xx included.
      */
+    @Throws(ApiError::class, CancellationException::class)
     public suspend fun request(
         baseURL: String,
         request: Request,
@@ -62,6 +65,7 @@ internal class NetworkProviderDefault(
     override fun intercept(action: suspend (String, Request, Next) -> Response): NetworkProvider =
         NetworkProviderDefault(http, modifiers, interceptors + Interceptor(action))
 
+    @Throws(ApiError::class, CancellationException::class)
     override suspend fun request(
         baseURL: String,
         request: Request,
