@@ -20,11 +20,11 @@ run = "./gradlew build --no-daemon"
 
 [tasks.test]
 description = "Run the unit tests."
-run = "./gradlew test --no-daemon"
+run = "./gradlew jvmTest test --no-daemon"
 
 [tasks.test-coverage]
 description = "Run the unit tests, write the merged Kover HTML report to build/reports/kover/html and verify the minimum line coverage."
-run = "./gradlew test koverHtmlReport koverVerify --no-daemon"
+run = "./gradlew jvmTest test koverHtmlReport koverVerify --no-daemon"
 
 [tasks.format]
 description = "Format Kotlin sources with ktlint."
