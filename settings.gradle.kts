@@ -5,13 +5,15 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+        google()
     }
 }
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        google()
     }
 }
 
-include(":networking-middle", ":networking-middle-ktor", ":sample")
+include(":networking-middle", ":networking-middle-ktor", ":sample", ":android-consumer")

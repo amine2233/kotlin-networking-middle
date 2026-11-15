@@ -9,6 +9,10 @@ kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
     abiValidation()
 
+    android {
+        namespace = "io.github.amine2233.networkingmiddle"
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(libs.coroutines.core)
