@@ -126,12 +126,15 @@ For Ktor-level tests use `ktor-client-mock` (`MockEngine`), see `networking-midd
 
 ## 8. Android
 
-- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a single JVM target, compiled to
-  Java 11 bytecode. Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
-  (`ktor-client-okhttp` or `ktor-client-android`). Maven consumers use the `-jvm` artifacts:
-  `io.github.amine2233:networking-middle-jvm` and `io.github.amine2233:networking-middle-ktor-jvm`.
+- Both `networking-middle` and `networking-middle-ktor` are Kotlin Multiplatform with a JVM and an Android target.
+  The Android target publishes an AAR per module, `io.github.amine2233:networking-middle-android` and
+  `io.github.amine2233:networking-middle-ktor-android`, built with `minSdk 24` and Java 11 bytecode.
+- Add `implementation("io.github.amine2233:networking-middle-ktor:0.1.0")` plus a Ktor engine
+  (`ktor-client-okhttp` or `ktor-client-android`); Gradle picks the Android AAR from the module metadata. Maven
+  consumers on the JVM use the `-jvm` artifacts: `io.github.amine2233:networking-middle-jvm` and
+  `io.github.amine2233:networking-middle-ktor-jvm`.
 - Compiled with `jvmTarget = 11` and `-Xjdk-release=11`, so no JDK 17-only API (e.g. `URLEncoder.encode(String, Charset)`,
-  API 33 on Android) can leak in. Safe on `minSdk 21+`.
+  API 33 on Android) can leak in. Requires `minSdk 24`.
 - `NetworkService`, `Interceptor` and `RequestBody` are `fun interface`s with `suspend` members: trivial from Kotlin,
   impractical from Java. The library is Kotlin-first.
 - Published to GitHub Packages by the release workflow; `./gradlew publishToMavenLocal -Pversion=x.y.z` for local testing.
