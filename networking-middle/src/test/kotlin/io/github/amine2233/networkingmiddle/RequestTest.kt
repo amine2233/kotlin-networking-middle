@@ -166,4 +166,35 @@ class RequestTest {
         job.cancelAndJoin()
         return CancelledRun(job.isCancelled, handled, escaped)
     }
+
+    @Test
+    fun `setHeader removes a header ignoring case`() {
+        val request = RequestFactory.create("/", HttpMethod.Get, headers = mapOf("Authorization" to "x"))
+        val removed = request.setHeader("authorization", null)
+        assertTrue(removed.headers.keys.none { it.equals("authorization", ignoreCase = true) })
+    }
+
+    @Test
+    fun `setHeader replaces a header ignoring case`() {
+        val request = RequestFactory.create("/", HttpMethod.Get, headers = mapOf("Content-Type" to "x"))
+        assertEquals(mapOf("content-type" to "a"), request.setHeader("content-type", "a").headers)
+    }
+
+    @Test
+    fun `UrlRequest setHeader replaces a header ignoring case`() {
+        val urlRequest = UrlRequest("https://api.test", headers = mapOf("Content-Type" to "a"))
+        assertEquals(mapOf("content-type" to "b"), urlRequest.setHeader("content-type", "b").headers)
+    }
+
+    @Test
+    fun `encodableBody keeps a content type set on the request`() =
+        runTest {
+            val request =
+                RequestFactory
+                    .create("/", HttpMethod.Post, body = RequestBodyFactory.encodableBody(mapOf("k" to "v")))
+                    .setHeader("content-type", "application/vnd.x+json")
+            val headers = request.asUrlRequest("https://api.test").headers
+            val contentTypes = headers.filterKeys { it.equals("content-type", ignoreCase = true) }
+            assertEquals(listOf("application/vnd.x+json"), contentTypes.values.toList())
+        }
 }

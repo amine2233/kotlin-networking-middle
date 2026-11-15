@@ -16,7 +16,7 @@ public data class UrlRequest(
     public fun setHeader(
         key: String,
         value: String,
-    ): UrlRequest = copy(headers = headers + (key to value))
+    ): UrlRequest = copy(headers = headers.withoutHeader(key) + (key to value))
 
     public fun appendingQuery(items: Map<String, String>): UrlRequest {
         if (items.isEmpty()) return this
@@ -62,6 +62,8 @@ public data class UrlResponse(
 }
 
 internal fun String.urlEncoded(): String = URLEncoder.encode(this, "UTF-8").replace("+", "%20")
+
+internal fun Map<String, String>.withoutHeader(key: String): Map<String, String> = filterKeys { !it.equals(key, ignoreCase = true) }
 
 internal fun String.appendingPathComponent(pathComponent: String): String {
     if (pathComponent.isEmpty()) return this
