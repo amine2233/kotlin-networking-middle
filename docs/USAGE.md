@@ -44,7 +44,10 @@ val provider = NetworkProviderFactory.create(client.asNetworkService())
 - Transport failures (`IOException`, timeouts) become a `Response` with `statusCode = 499` and `error` set; `validate()` rethrows them.
 - Cancelling the calling coroutine always propagates `CancellationException`, even if the engine reports it as an `IOException`.
 - Empty bodies map to `body == null` (URLSession gives empty `Data`), so `decode<Unit>()` on a 204 returns `Unit`, while decoding any other model from a 204 throws `ApiError.Response`.
-- `stringBody`/`dataBody` set no `Content-Type`; Ktor then sends `application/octet-stream`. Add a header if the server cares.
+- The body's content type comes from the request's `Content-Type` header (any casing). `stringBody`/`dataBody` set none, so the adapter sends `application/octet-stream` when no `Content-Type` header is present. Add a header if the server cares.
+- Request headers override client defaults such as `DefaultRequest` headers: the request's value replaces the default instead of being sent next to it.
+- A `Content-Type` that Ktor cannot parse fails as `ApiError.Client` before any I/O (through the provider: `statusCode = 499`, `error` set).
+- The adapter never closes the `HttpClient`: the caller owns it and must `close()` it.
 - `dataBody` copies its input when called, so later changes to the source array do not affect the request; `body` arrays on `UrlRequest`, `UrlResponse` and `Response` must not be mutated.
 
 On Android use the `OkHttp` or `Android` Ktor engine instead of `CIO`; nothing else changes.
