@@ -77,4 +77,16 @@ class RequestBodyTest {
             val applied = RequestBodyFactory.formBody(mapOf("a b" to "c")).apply(base)
             assertEquals("a%20b=c", applied.body?.decodeToString())
         }
+
+    @Test
+    fun `json and form bodies keep a pre-set content type`() =
+        runTest {
+            val preset = base.setHeader("content-type", "application/vnd.x+json")
+            val json = RequestBodyFactory.jsonBody(buildJsonObject { put("k", 1) }).apply(preset)
+            val form = RequestBodyFactory.formBody(mapOf("k" to "v")).apply(preset)
+            assertEquals(mapOf("content-type" to "application/vnd.x+json"), json.headers)
+            assertEquals("""{"k":1}""", json.body?.decodeToString())
+            assertEquals(mapOf("content-type" to "application/vnd.x+json"), form.headers)
+            assertEquals("k=v", form.body?.decodeToString())
+        }
 }
