@@ -1,0 +1,15 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.amine2233:networking-middle-ktor>
+final class io.github.amine2233.networkingmiddle.ktor/NetworkServiceKtor : io.github.amine2233.networkingmiddle/NetworkService { // io.github.amine2233.networkingmiddle.ktor/NetworkServiceKtor|null[0]
+    constructor <init>(io.ktor.client/HttpClient) // io.github.amine2233.networkingmiddle.ktor/NetworkServiceKtor.<init>|<init>(io.ktor.client.HttpClient){}[0]
+
+    final suspend fun execute(io.github.amine2233.networkingmiddle/UrlRequest): io.github.amine2233.networkingmiddle/UrlResponse // io.github.amine2233.networkingmiddle.ktor/NetworkServiceKtor.execute|execute(io.github.amine2233.networkingmiddle.UrlRequest){}[0]
+}
+
+final fun (io.ktor.client/HttpClient).io.github.amine2233.networkingmiddle.ktor/asNetworkService(): io.github.amine2233.networkingmiddle/NetworkService // io.github.amine2233.networkingmiddle.ktor/asNetworkService|asNetworkService@io.ktor.client.HttpClient(){}[0]

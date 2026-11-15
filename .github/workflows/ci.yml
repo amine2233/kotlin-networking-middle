@@ -30,7 +30,7 @@ jobs:
           path: ~/.konan
           key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
           restore-keys: konan-${{ runner.os }}-
-      - run: ./gradlew :networking-middle:allTests --no-daemon
+      - run: ./gradlew :networking-middle:allTests :networking-middle-ktor:allTests --no-daemon
 
   android-tests:
     name: Android tests
