@@ -15,7 +15,7 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
 Both `networking-middle` and `networking-middle-ktor` also build for iOS and macOS on arm64 (`iosArm64`,
-`iosSimulatorArm64`, `macosArm64`). The Apple artifacts of both modules are not published yet (item 14, issue #14).
+`iosSimulatorArm64`, `macosArm64`). Every target of both modules (JVM, Android and Apple) is published.
 
 ## Toolchain
 
@@ -29,6 +29,7 @@ mise run format                # ktlint --format
 mise run build                 # full Gradle build
 mise run build_documentations  # aggregated Dokka HTML docs (build/dokka/html)
 mise run sample                # run the Ktor sample
+mise run verify-publish        # publish to build/local-maven-repo, check the metadata, compile kmp-consumer (macOS)
 ```
 
 Building also needs an Android SDK (the libraries have an Android target, `compileSdk 36`). AGP finds it through
@@ -59,10 +60,20 @@ dependencies {
 }
 ```
 
-Gradle consumers depend on `networking-middle` / `networking-middle-ktor` as above; both modules are Kotlin
-Multiplatform with JVM and Android targets, and Gradle picks the JVM or Android variant from their metadata. Maven consumers use
-`io.github.amine2233:networking-middle-jvm` for the core and `io.github.amine2233:networking-middle-ktor-jvm` for the
-Ktor adapter.
+GitHub Packages needs a token with the `read:packages` scope even to read public packages.
+
+| Platform                | Core (`io.github.amine2233:`)         | Ktor adapter (`io.github.amine2233:`)      |
+|-------------------------|---------------------------------------|--------------------------------------------|
+| Gradle Multiplatform    | `networking-middle`                   | `networking-middle-ktor`                   |
+| JVM                     | `networking-middle-jvm`               | `networking-middle-ktor-jvm`               |
+| Android                 | `networking-middle-android`           | `networking-middle-ktor-android`           |
+| iOS device (`iosArm64`) | `networking-middle-iosarm64`          | `networking-middle-ktor-iosarm64`          |
+| iOS simulator           | `networking-middle-iossimulatorarm64` | `networking-middle-ktor-iossimulatorarm64` |
+| macOS (`macosArm64`)    | `networking-middle-macosarm64`        | `networking-middle-ktor-macosarm64`        |
+
+Gradle consumers (JVM, Android or Kotlin Multiplatform) depend on the root coordinate, `networking-middle` /
+`networking-middle-ktor`, as above; Gradle picks the right target variant from the module metadata. The per-target ids
+are for Maven or other non-Gradle tools.
 
 ## CI/CD
 
@@ -71,15 +82,28 @@ All logic lives in `mise.toml`:
 
 - `mise run test-coverage` / `mise run lint` — what the `CI` workflow runs on pull requests.
 - The `apple-tests` job of the `CI` workflow runs `./gradlew :networking-middle:allTests :networking-middle-ktor:allTests`
-  on a macOS arm64 runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`.
+  on a macOS arm64 runner (JVM, macOS and iOS simulator tests for both modules) and caches `~/.konan`. It then runs
+  `mise run verify-publish`: both modules are published to `build/local-maven-repo` with version `0.0.0-verify`, the
+  artifact set and `.module` metadata are checked, and the standalone `kmp-consumer` fixture compiles for `jvm` and
+  `iosSimulatorArm64` against them.
 - The `android-tests` job of the `CI` workflow runs the Android host tests of both libraries, checks that the
   `android-consumer` fixture resolves their Android variants and assembles the AARs, using the Android SDK preinstalled
   on `ubuntu-latest`.
-- Releases are manual: run the `Release` workflow from the Actions tab on `main`. semantic-release reads the
-  `feat:` / `fix:` commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes
-  `io.github.amine2233:networking-middle` and `io.github.amine2233:networking-middle-ktor` to GitHub Packages
-  and creates the GitHub release with the jars attached.
+- Releases are manual: run the `Release` workflow from the Actions tab on `main`. The release job runs on a macOS
+  arm64 runner, so one build publishes every target of both modules. semantic-release reads the `feat:` / `fix:`
+  commits since the last tag, tags `vX.Y.Z`, updates `CHANGELOG.md`, publishes `io.github.amine2233:networking-middle`
+  and `io.github.amine2233:networking-middle-ktor` with all their targets to GitHub Packages and creates the GitHub
+  release with the two JVM jars attached (`networking-middle-jvm-X.Y.Z.jar`, `networking-middle-ktor-jvm-X.Y.Z.jar`).
 - `mise run release --dry-run` previews the next version locally.
+
+### First release
+
+1. Run the `Release` workflow from the Actions tab on `main`.
+2. Check that the GitHub release has the two `-jvm` jars and that GitHub Packages lists every artifact from the
+   coordinates table in [Installation](#installation).
+3. With a `read:packages` token, point a KMP consumer (for example a copy of `kmp-consumer` with the GitHub Packages
+   repository instead of the local one) at the new version and run its `compileKotlinJvm` and
+   `compileKotlinIosSimulatorArm64` tasks.
 
 ## Usage
 
