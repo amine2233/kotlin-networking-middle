@@ -18,6 +18,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
+import kotlinx.io.IOException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -64,11 +65,11 @@ class NetworkServiceKtorTest {
     @Test
     fun `engine failure becomes an error response through the provider`() =
         runTest {
-            val service = HttpClient(MockEngine { throw java.io.IOException("offline") }).asNetworkService()
+            val service = HttpClient(MockEngine { throw IOException("offline") }).asNetworkService()
             val provider = NetworkProviderFactory.create(service)
             val response = provider.request("https://api.test", provider.newBuilder("/", HttpMethod.Get))
             assertEquals(499, response.statusCode)
-            assertIs<java.io.IOException>(response.error)
+            assertIs<IOException>(response.error)
         }
 
     @Test

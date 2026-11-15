@@ -11,7 +11,7 @@ Request ──▶ RequestModifier* ──▶ Interceptor₁ ──▶ Intercepto
 | Module                   | Contents                                                     | Depends on                          |
 |--------------------------|--------------------------------------------------------------|-------------------------------------|
 | `networking-middle`      | `Request`, `Response`, `NetworkProvider`, modifiers, interceptors, `NetworkService` contract | kotlinx-coroutines, kotlinx-serialization-json |
-| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor       | `networking-middle`, ktor-client-core |
+| `networking-middle-ktor` | `NetworkServiceKtor` — the only place that imports Ktor (Kotlin Multiplatform, JVM target) | `networking-middle`, ktor-client-core |
 | `sample`                 | Console app hitting httpbin.org through Ktor CIO              | both                                |
 
 The core `networking-middle` also builds for iOS and macOS on arm64 (`iosArm64`, `iosSimulatorArm64`, `macosArm64`).
@@ -55,8 +55,10 @@ dependencies {
 }
 ```
 
-Gradle consumers depend on `networking-middle` / `networking-middle-ktor` as above; Gradle picks the JVM variant of the
-Multiplatform core from its metadata. Maven consumers use `io.github.amine2233:networking-middle-jvm` for the core.
+Gradle consumers depend on `networking-middle` / `networking-middle-ktor` as above; both modules are Kotlin
+Multiplatform with a JVM target, and Gradle picks the JVM variant from their metadata. Maven consumers use
+`io.github.amine2233:networking-middle-jvm` for the core and `io.github.amine2233:networking-middle-ktor-jvm` for the
+Ktor adapter.
 
 ## CI/CD
 
@@ -109,5 +111,5 @@ val provider = NetworkProviderFactory.create(NetworkService { UrlResponse(200, b
 
 ## Android
 
-Kotlin Multiplatform core with a JVM target, Java 11 bytecode (`-Xjdk-release=11`), no `java.time`/`java.net.http`. Consume it from any Android module
+Kotlin Multiplatform core and Ktor adapter with a JVM target, Java 11 bytecode (`-Xjdk-release=11`), no `java.time`/`java.net.http`. Consume it from any Android module
 with AGP 8+ (`minSdk 24+` recommended; see [docs/USAGE.md](docs/USAGE.md#android)).

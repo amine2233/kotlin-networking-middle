@@ -16,6 +16,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.ByteArrayContent
 import io.ktor.util.AttributeKey
+import io.ktor.util.CaseInsensitiveMap
 
 /**
  * [NetworkService] backed by a Ktor [HttpClient]. Configure engine, timeouts and pinning on the client.
@@ -72,7 +73,7 @@ public class NetworkServiceKtor(
     private suspend fun HttpResponse.toUrlResponse(): UrlResponse =
         UrlResponse(
             statusCode = status.value,
-            headers = headers.entries().associateTo(sortedMapOf(String.CASE_INSENSITIVE_ORDER)) { it.key to it.value },
+            headers = headers.entries().associateTo(CaseInsensitiveMap<List<String>>()) { it.key to it.value },
             body = readRawBytes().takeIf { it.isNotEmpty() },
         )
 
