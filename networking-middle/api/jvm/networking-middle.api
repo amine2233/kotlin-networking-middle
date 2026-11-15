@@ -1,0 +1,279 @@
+public final class io/github/amine2233/networkingmiddle/AnyRequest : io/github/amine2233/networkingmiddle/Request {
+	public fun <init> (Lio/github/amine2233/networkingmiddle/Request;)V
+	public fun <init> (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun component3 ()Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public final fun component4 ()Lio/github/amine2233/networkingmiddle/RequestBody;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/AnyRequest;
+	public static synthetic fun copy$default (Lio/github/amine2233/networkingmiddle/AnyRequest;Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/AnyRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBody ()Lio/github/amine2233/networkingmiddle/RequestBody;
+	public fun getHeaders ()Ljava/util/Map;
+	public fun getMethod ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public fun getParameters ()Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/amine2233/networkingmiddle/AnyResponse : io/github/amine2233/networkingmiddle/Response {
+	public fun <init> (Lio/github/amine2233/networkingmiddle/Response;)V
+	public fun <init> (Lio/github/amine2233/networkingmiddle/UrlRequest;[BLjava/util/Map;ILjava/lang/Throwable;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBody ()[B
+	public fun getError ()Ljava/lang/Throwable;
+	public fun getHeaders ()Ljava/util/Map;
+	public fun getRequest ()Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public fun getStatusCode ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class io/github/amine2233/networkingmiddle/ApiError : java/lang/Exception {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Api : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public final fun getStatusCode ()Ljava/lang/Integer;
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Body : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$CertificatePinningFailed : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Client : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$CreateQueryParameter : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$InvalidUrl : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Parser : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$RequestParameters : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Response : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$StatusCode : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> ()V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Unauthenticated : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> ()V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Unauthorized : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> ()V
+}
+
+public final class io/github/amine2233/networkingmiddle/ApiError$Unknown : io/github/amine2233/networkingmiddle/ApiError {
+	public fun <init> ()V
+}
+
+public final class io/github/amine2233/networkingmiddle/HttpMethod {
+	public static final field Companion Lio/github/amine2233/networkingmiddle/HttpMethod$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRawValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/amine2233/networkingmiddle/HttpMethod$Companion {
+	public final fun getDelete ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getGet ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getHead ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getPatch ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getPost ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getPut ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/Interceptor {
+	public abstract fun intercept (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/Request;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/amine2233/networkingmiddle/InterceptorFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/InterceptorFactory;
+	public final fun bearerAuth (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
+	public static synthetic fun bearerAuth$default (Lio/github/amine2233/networkingmiddle/InterceptorFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/Interceptor;
+	public final fun interceptorLogger (Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
+	public final fun interceptorTimeLogger (Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Interceptor;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/NetworkProvider {
+	public abstract fun intercept (Lkotlin/jvm/functions/Function4;)Lio/github/amine2233/networkingmiddle/NetworkProvider;
+	public abstract fun modifyRequests (Lkotlin/jvm/functions/Function2;)Lio/github/amine2233/networkingmiddle/NetworkProvider;
+	public abstract fun newBuilder (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/Request;
+	public static synthetic fun newBuilder$default (Lio/github/amine2233/networkingmiddle/NetworkProvider;Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/Request;
+	public abstract fun request (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/Request;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/amine2233/networkingmiddle/NetworkProvider$DefaultImpls {
+	public static synthetic fun newBuilder$default (Lio/github/amine2233/networkingmiddle/NetworkProvider;Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/Request;
+}
+
+public final class io/github/amine2233/networkingmiddle/NetworkProviderFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/NetworkProviderFactory;
+	public final fun create (Lio/github/amine2233/networkingmiddle/NetworkService;Ljava/util/List;Ljava/util/List;)Lio/github/amine2233/networkingmiddle/NetworkProvider;
+	public static synthetic fun create$default (Lio/github/amine2233/networkingmiddle/NetworkProviderFactory;Lio/github/amine2233/networkingmiddle/NetworkService;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/NetworkProvider;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/NetworkService {
+	public abstract fun execute (Lio/github/amine2233/networkingmiddle/UrlRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/Request {
+	public abstract fun getBody ()Lio/github/amine2233/networkingmiddle/RequestBody;
+	public abstract fun getHeaders ()Ljava/util/Map;
+	public abstract fun getMethod ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public abstract fun getParameters ()Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public abstract fun getPath ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/RequestBody {
+	public abstract fun apply (Lio/github/amine2233/networkingmiddle/UrlRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/amine2233/networkingmiddle/RequestBodyFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/RequestBodyFactory;
+	public final fun dataBody ([B)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public final fun encodableBody (Ljava/lang/Object;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public static synthetic fun encodableBody$default (Lio/github/amine2233/networkingmiddle/RequestBodyFactory;Ljava/lang/Object;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public final fun formBody (Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public final fun jsonBody (Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/Json;)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public static synthetic fun jsonBody$default (Lio/github/amine2233/networkingmiddle/RequestBodyFactory;Lkotlinx/serialization/json/JsonElement;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/RequestBody;
+	public final fun stringBody (Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/RequestBody;
+}
+
+public final class io/github/amine2233/networkingmiddle/RequestFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/RequestFactory;
+	public final fun create (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/Request;
+	public static synthetic fun create$default (Lio/github/amine2233/networkingmiddle/RequestFactory;Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Lio/github/amine2233/networkingmiddle/RequestParameters;Lio/github/amine2233/networkingmiddle/RequestBody;Ljava/util/Map;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/Request;
+}
+
+public final class io/github/amine2233/networkingmiddle/RequestKt {
+	public static final fun asUrlRequest (Lio/github/amine2233/networkingmiddle/Request;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun authorised (Lio/github/amine2233/networkingmiddle/Request;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/Request;
+	public static final fun bearer (Lio/github/amine2233/networkingmiddle/Request;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/Request;
+	public static final fun setHeader (Lio/github/amine2233/networkingmiddle/Request;Ljava/lang/String;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/Request;
+	public static final fun toAnyRequest (Lio/github/amine2233/networkingmiddle/Request;)Lio/github/amine2233/networkingmiddle/AnyRequest;
+	public static final fun token (Lio/github/amine2233/networkingmiddle/Request;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/Request;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/RequestModifier {
+	public abstract fun modify (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/Request;)Lio/github/amine2233/networkingmiddle/Request;
+}
+
+public final class io/github/amine2233/networkingmiddle/RequestModifierFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/RequestModifierFactory;
+	public final fun bearerToken (Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/RequestModifier;
+	public final fun header (Ljava/lang/String;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/RequestModifier;
+	public final fun token (Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/RequestModifier;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/RequestParameters {
+	public abstract fun apply (Lio/github/amine2233/networkingmiddle/UrlRequest;)Lio/github/amine2233/networkingmiddle/UrlRequest;
+}
+
+public final class io/github/amine2233/networkingmiddle/RequestParametersFactory {
+	public static final field INSTANCE Lio/github/amine2233/networkingmiddle/RequestParametersFactory;
+	public final fun queryEncodableParameters (Ljava/lang/Object;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public static synthetic fun queryEncodableParameters$default (Lio/github/amine2233/networkingmiddle/RequestParametersFactory;Ljava/lang/Object;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public final fun queryParameters (Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/RequestParameters;
+	public final fun stringRequestParameters (Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/RequestParameters;
+}
+
+public abstract interface class io/github/amine2233/networkingmiddle/Response {
+	public static final field Companion Lio/github/amine2233/networkingmiddle/Response$Companion;
+	public abstract fun getBody ()[B
+	public abstract fun getError ()Ljava/lang/Throwable;
+	public abstract fun getHeaders ()Ljava/util/Map;
+	public abstract fun getRequest ()Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public abstract fun getStatusCode ()I
+}
+
+public final class io/github/amine2233/networkingmiddle/Response$Companion {
+	public final fun error (Ljava/lang/Throwable;)Lio/github/amine2233/networkingmiddle/Response;
+}
+
+public final class io/github/amine2233/networkingmiddle/ResponseKt {
+	public static final fun debug (Lio/github/amine2233/networkingmiddle/Response;Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun decode (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun decode$default (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun decodeError (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun decodeError$default (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun decodeErrorResult (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun decodeErrorResult$default (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun decodeResult (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun decodeResult$default (Lio/github/amine2233/networkingmiddle/Response;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun flatMap (Lio/github/amine2233/networkingmiddle/Response;Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun getDescription (Lio/github/amine2233/networkingmiddle/Response;)Ljava/lang/String;
+	public static final fun header (Lio/github/amine2233/networkingmiddle/Response;Ljava/lang/String;)Ljava/util/List;
+	public static final fun log (Lio/github/amine2233/networkingmiddle/Response;Lkotlin/jvm/functions/Function1;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun map (Lio/github/amine2233/networkingmiddle/Response;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun mapError (Lio/github/amine2233/networkingmiddle/Response;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun result (Lio/github/amine2233/networkingmiddle/Response;)Ljava/lang/Object;
+	public static final fun unauthenticated (Lio/github/amine2233/networkingmiddle/Response;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun unauthorized (Lio/github/amine2233/networkingmiddle/Response;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun validate (Lio/github/amine2233/networkingmiddle/Response;)Lio/github/amine2233/networkingmiddle/Response;
+	public static final fun validate (Lio/github/amine2233/networkingmiddle/Response;I)Lio/github/amine2233/networkingmiddle/Response;
+}
+
+public final class io/github/amine2233/networkingmiddle/UrlRequest {
+	public static final field Companion Lio/github/amine2233/networkingmiddle/UrlRequest$Companion;
+	public fun <init> (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Ljava/util/Map;[B)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Ljava/util/Map;[BILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun appendingQuery (Ljava/util/Map;)Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()[B
+	public final fun copy (Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Ljava/util/Map;[B)Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public static synthetic fun copy$default (Lio/github/amine2233/networkingmiddle/UrlRequest;Ljava/lang/String;Lio/github/amine2233/networkingmiddle/HttpMethod;Ljava/util/Map;[BILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBody ()[B
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getMethod ()Lio/github/amine2233/networkingmiddle/HttpMethod;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setHeader (Ljava/lang/String;Ljava/lang/String;)Lio/github/amine2233/networkingmiddle/UrlRequest;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/amine2233/networkingmiddle/UrlRequest$Companion {
+}
+
+public final class io/github/amine2233/networkingmiddle/UrlResponse {
+	public fun <init> (ILjava/util/Map;[B)V
+	public synthetic fun <init> (ILjava/util/Map;[BILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()[B
+	public final fun copy (ILjava/util/Map;[B)Lio/github/amine2233/networkingmiddle/UrlResponse;
+	public static synthetic fun copy$default (Lio/github/amine2233/networkingmiddle/UrlResponse;ILjava/util/Map;[BILjava/lang/Object;)Lio/github/amine2233/networkingmiddle/UrlResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBody ()[B
+	public final fun getHeaders ()Ljava/util/Map;
+	public final fun getStatusCode ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
