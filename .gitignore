@@ -1,5 +1,7 @@
 .gradle/
 build/
+.build/
+.swiftpm/
 .kotlin/
 .idea/
 *.iml
